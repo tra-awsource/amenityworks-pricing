@@ -4,6 +4,17 @@
 
 ### **https://tra-awsource.github.io/amenityworks-pricing/**
 
+### Access password (starter — change soon)
+
+| | |
+|--|--|
+| **Password** | `ChangeMe-AW-2026` |
+| **Stored on site** | SHA-256 hash only (cannot be reversed) |
+| **Change password** | Open [set-password.html](https://tra-awsource.github.io/amenityworks-pricing/set-password.html) → generate hash → paste into `access-config.js` → `git push` |
+| **Session** | Stays unlocked ~30 days on that device, or use **Lock / log out** on the hub |
+
+**Honesty note:** This stops casual visitors. A determined person who downloads the site files could still try to bypass client-side gates. For bank-level control, use Cloudflare Access (email allowlist) later.
+
 | Page | URL |
 |------|-----|
 | Hub | https://tra-awsource.github.io/amenityworks-pricing/ |

@@ -1,10 +1,14 @@
 /* AmenityWorks Pricing — offline cache for local/network use */
-const CACHE = "aw-pricing-v3";
+const CACHE = "aw-pricing-v4";
 const PRECACHE = [
   "./",
   "./index.html",
   "./hub.css",
   "./manifest.webmanifest",
+  "./access-config.js",
+  "./access-gate.js",
+  "./access-gate.css",
+  "./set-password.html",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./junk/index.html",
@@ -13,6 +17,7 @@ const PRECACHE = [
   "./demo/index.html",
   "./demo/styles.css",
   "./demo/app.js",
+  "./mobile-shared.css",
 ];
 
 self.addEventListener("install", (event) => {

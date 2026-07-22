@@ -13,6 +13,9 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" href="icons/icon-192.png" />
   <link rel="stylesheet" href="hub.css" />
+  <link rel="stylesheet" href="access-gate.css" />
+  <script src="access-config.js"></script>
+  <script src="access-gate.js"></script>
 </head>
 <body>
   <div class="shell">
@@ -51,12 +54,18 @@
         <li><strong>Android (Chrome):</strong> Menu → <strong>Install app</strong> / Add to Home screen.</li>
         <li>Open Junk or Demo once → set rates → <strong>Save defaults</strong> (stored on this device).</li>
       </ol>
-      <p class="note">Rates are saved in your browser only — not on the server. Anyone with the link can use the calculators; don’t put private customer data in the quote fields if you share the URL widely.</p>
+      <p class="note">Rates stay in your browser only. The site is password-protected — share the password only with people you trust. Change it via <a href="set-password.html" style="color:#4ecf8a">set-password.html</a> + update <code>access-config.js</code>.</p>
+      <p class="note"><button type="button" id="aw-lock-btn" style="margin-top:0.5rem;min-height:2.5rem;padding:0.4rem 0.9rem;border-radius:8px;border:1px solid #2e3d36;background:#141a17;color:#e8f2ec;font-weight:600;cursor:pointer">Lock / log out</button></p>
     </section>
 
     <footer>
-      <p>Offline-capable after first load on this network. Data stays in your browser (localStorage).</p>
+      <p>Password required. Data stays in your browser (localStorage).</p>
     </footer>
+    <script>
+      document.getElementById("aw-lock-btn")?.addEventListener("click", function () {
+        if (window.AW_LOCK) window.AW_LOCK();
+      });
+    </script>
   </div>
   <script>
     if ("serviceWorker" in navigator) {

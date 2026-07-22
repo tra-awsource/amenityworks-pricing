@@ -1,0 +1,122 @@
+/* Full-screen access gate — shown until password unlocks */
+#aw-access-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  background: #0c100e;
+  color: #e8f2ec;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+#aw-access-gate[hidden] {
+  display: none !important;
+}
+
+#aw-access-gate .aw-gate-card {
+  width: 100%;
+  max-width: 22rem;
+  background: #1a2420;
+  border: 1px solid #2e3d36;
+  border-radius: 16px;
+  padding: 1.35rem 1.25rem 1.4rem;
+  box-shadow: 0 12px 40px #00000066;
+}
+
+#aw-access-gate .aw-gate-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4ecf8a;
+}
+
+#aw-access-gate h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+#aw-access-gate .aw-gate-sub {
+  margin: 0 0 1.1rem;
+  font-size: 0.9rem;
+  color: #8fa398;
+  line-height: 1.4;
+}
+
+#aw-access-gate label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8fa398;
+  margin-bottom: 0.35rem;
+}
+
+#aw-access-gate input[type="password"],
+#aw-access-gate input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid #2e3d36;
+  background: #0c100e;
+  color: #e8f2ec;
+  margin-bottom: 0.75rem;
+}
+
+#aw-access-gate input:focus {
+  outline: none;
+  border-color: #4ecf8a;
+  box-shadow: 0 0 0 3px #4ecf8a33;
+}
+
+#aw-access-gate button {
+  width: 100%;
+  min-height: 2.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  border-radius: 10px;
+  background: #4ecf8a;
+  color: #06140c;
+  cursor: pointer;
+}
+
+#aw-access-gate button:active {
+  transform: scale(0.98);
+}
+
+#aw-access-gate .aw-gate-error {
+  margin: 0.65rem 0 0;
+  font-size: 0.85rem;
+  color: #f07178;
+  font-weight: 600;
+  min-height: 1.25rem;
+}
+
+#aw-access-gate .aw-gate-hint {
+  margin: 0.85rem 0 0;
+  font-size: 0.75rem;
+  color: #6a7a72;
+  line-height: 1.35;
+}
+
+body.aw-locked {
+  overflow: hidden;
+}
+
+body.aw-locked > .app,
+body.aw-locked > .shell {
+  visibility: hidden;
+  pointer-events: none;
+}
