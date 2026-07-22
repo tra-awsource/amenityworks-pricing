@@ -1,0 +1,184 @@
+/* Shared mobile polish for pricing apps */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+
+.app {
+  padding-top: calc(0.5rem + var(--safe-top)) !important;
+  padding-bottom: calc(4.5rem + var(--safe-bottom)) !important;
+}
+
+/* Sticky back bar on phones */
+.mobile-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.25rem 0.65rem;
+  margin: 0 0 0.5rem;
+  background: linear-gradient(to bottom, var(--bg, #0f1419) 70%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.mobile-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  min-width: 2.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border, #2d3a48);
+  color: var(--text, #e8eef4);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: var(--bg-elevated, #1a222c);
+}
+
+.mobile-nav a:active {
+  opacity: 0.85;
+}
+
+.mobile-nav .nav-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted, #8b9aab);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Prevent iOS zoom on focus — inputs need >= 16px */
+.field input,
+.field select,
+textarea,
+.item-chip input[type="number"],
+.edit-table input {
+  font-size: 16px !important;
+  min-height: 2.65rem;
+}
+
+.btn {
+  min-height: 2.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.check {
+  min-height: 2.5rem;
+  padding: 0.25rem 0;
+}
+
+.check input {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+}
+
+.tabs {
+  position: sticky;
+  top: 3.1rem;
+  z-index: 40;
+  background: var(--bg, #0f1419);
+  padding-top: 0.25rem;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: 0 0 auto;
+  min-height: 2.5rem;
+  white-space: nowrap;
+}
+
+.item-grid {
+  grid-template-columns: 1fr !important;
+}
+
+.item-chip {
+  min-height: 3rem;
+}
+
+.item-chip input[type="number"] {
+  width: 3.25rem !important;
+  min-height: 2.5rem;
+}
+
+.price-amt.big {
+  font-size: 1.35rem !important;
+}
+
+.metrics {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+@media (min-width: 821px) {
+  .item-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  }
+  .metrics {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Floating copy on mobile when long page */
+@media (max-width: 820px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .header-actions {
+    width: 100%;
+  }
+  .header-actions .btn {
+    flex: 1;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  h1 {
+    font-size: 1.4rem !important;
+  }
+  .card {
+    padding: 1rem !important;
+  }
+  .price-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.35rem;
+  }
+  .price-amt {
+    align-self: flex-end;
+  }
+  textarea {
+    min-height: 180px;
+  }
+  .table-wrap {
+    margin: 0 -0.25rem;
+  }
+  .edit-table input {
+    max-width: 5.5rem;
+  }
+}

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e1210" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Junk Pricer" />
+  <title>Junk Haul Pricer · AmenityWorks</title>
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="../icons/junk-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../mobile-shared.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <nav class="mobile-nav" aria-label="App navigation">
+      <a href="../index.html">← Home</a>
+      <span class="nav-title">Junk Haul Pricer</span>
+      <a href="../demo/index.html">Demo</a>
+    </nav>
+    <header class="header">
+      <div>
+        <p class="eyebrow">AmenityWorks · Austin, TX</p>
+        <h1>Junk Haul Pricer</h1>
+        <p class="subtitle">
+          One-off residential · one-off commercial · recurring · volume, items, or hybrid · cost floor.
+        </p>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn ghost" id="btnReset">Reset</button>
+        <button type="button" class="btn ghost" id="btnSave">Save defaults</button>
+      </div>
+    </header>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="job">Job quote</button>
+      <button type="button" class="tab" data-tab="rates">Rate card</button>
+      <button type="button" class="tab" data-tab="costs">True costs</button>
+      <button type="button" class="tab" data-tab="guide">How to price</button>
+    </div>
+
+    <!-- JOB QUOTE -->
+    <div class="tab-panel active" id="panel-job">
+      <main class="grid">
+        <section class="card">
+          <h2>Job setup</h2>
+          <div class="fields">
+            <label class="field">
+              <span>Customer / job name</span>
+              <input type="text" id="jobName" placeholder="e.g. Oak Hill garage cleanout" />
+            </label>
+            <div class="row2">
+              <label class="field">
+                <span>Job type</span>
+                <select id="jobType">
+                  <option value="oneoff">One-off residential</option>
+                  <option value="oneoff_com">One-off commercial</option>
+                  <option value="recurring_res">Recurring residential</option>
+                  <option value="recurring_com">Recurring commercial / property</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Pricing mode</span>
+                <select id="priceMode">
+                  <option value="hybrid" selected>Hybrid (higher of item vs volume)</option>
+                  <option value="volume">Volume only</option>
+                  <option value="items">Per-item only</option>
+                </select>
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Load size (trailer volume)</span>
+                <select id="loadSize">
+                  <option value="min">Minimum / 1–2 small items</option>
+                  <option value="eighth">⅛ trailer</option>
+                  <option value="quarter" selected>¼ trailer</option>
+                  <option value="third">⅓ trailer</option>
+                  <option value="half">½ trailer</option>
+                  <option value="three_quarter">¾ trailer</option>
+                  <option value="full">Full trailer</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Round trip miles</span>
+                <input type="number" id="miles" min="0" step="1" value="20" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Est. labor hours (on site)</span>
+                <input type="number" id="laborHours" min="0" step="0.25" value="1.5" />
+              </label>
+              <label class="field">
+                <span>Dump fees this load ($)</span>
+                <input type="number" id="dumpFees" min="0" step="1" value="45" />
+              </label>
+            </div>
+            <p class="hint">Add items below for per-item / hybrid. Volume still applies from load size.</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Adders</h2>
+          <div class="fields">
+            <div class="row2">
+              <label class="field">
+                <span>Stairs (floors)</span>
+                <input type="number" id="stairsFloors" min="0" step="1" value="0" />
+              </label>
+              <label class="field">
+                <span>$ per floor (stairs)</span>
+                <input type="number" id="stairsPerFloor" min="0" step="1" value="30" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Heavy items (count)</span>
+                <input type="number" id="heavyCount" min="0" step="1" value="0" />
+              </label>
+              <label class="field">
+                <span>$ per heavy item</span>
+                <input type="number" id="heavyEach" min="0" step="1" value="75" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Long carries (&gt;50 ft)</span>
+                <input type="number" id="longCarryCount" min="0" step="1" value="0" />
+              </label>
+              <label class="field">
+                <span>$ per long carry</span>
+                <input type="number" id="longCarryEach" min="0" step="1" value="25" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Breakdown / demo / extraction</span>
+                <input type="number" id="breakdownCount" min="0" step="1" value="0" title="Count of breakdown, light demo, or dig-out tasks (pylons, buried wood, posts, etc.)" />
+              </label>
+              <label class="field">
+                <span>$ each (breakdown / extraction)</span>
+                <input type="number" id="breakdownEach" min="0" step="1" value="50" title="Per task: furniture breakdown, light demo, or digging material out of dirt" />
+              </label>
+            </div>
+            <p class="hint" style="margin-top:-0.35rem">
+              Use for: breaking down furniture, light demo, <strong>digging out pylons/posts, buried wood, or other material stuck in dirt</strong>. Count each distinct dig-out or breakdown task; raise $ each for deep/hard extractions ($75–150+).
+            </p>
+            <div class="row2">
+              <label class="field">
+                <span>Paint to dispose (gallons)</span>
+                <input type="number" id="paintGallons" min="0" step="0.5" value="0" />
+              </label>
+              <label class="field">
+                <span>Paint dump fee ($/gal)</span>
+                <input type="number" id="paintPerGallon" min="0" step="0.01" value="7.50" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Hazmat / special handling fee ($)</span>
+                <input type="number" id="hazmatFee" min="0" step="1" value="0" title="Flat fee for paint mess, chemicals, packing, extra HHW trip, etc." />
+              </label>
+              <label class="field">
+                <span>Preset quick-add</span>
+                <select id="hazmatPreset">
+                  <option value="0">None / custom above</option>
+                  <option value="15">Light — $15</option>
+                  <option value="25">Standard — $25</option>
+                  <option value="40">Heavy / extra trip — $40</option>
+                  <option value="60">Major sort / multi-stop — $60</option>
+                </select>
+              </label>
+            </div>
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="rush" /> Same-day / rush (+15%)</label>
+              <label class="check"><input type="checkbox" id="afterHours" /> After-hours / weekend (+15%)</label>
+            </div>
+            <p class="hint">
+              Mattress fee ($<span id="mattressFeeLabel">20</span> each) only when mattress qty is set in Items.
+              Paint dump = $<span id="paintFeeLabel">7.50</span>/gal pass-through when gallons &gt; 0.
+              <strong>Hazmat handling</strong> is your flat fee for extra work (not the dump’s per-gallon paint rate).
+            </p>
+          </div>
+        </section>
+
+        <section class="card full">
+          <div class="card-head">
+            <h2>Items (optional)</h2>
+            <button type="button" class="btn ghost sm" id="btnClearItems">Clear items</button>
+          </div>
+          <div class="item-grid" id="itemGrid"></div>
+          <p class="hint" id="itemSumHint">Selected items total: $0</p>
+        </section>
+
+        <section class="card results">
+          <h2>Quote</h2>
+          <div class="metrics">
+            <div class="metric">
+              <span class="metric-label">Volume base</span>
+              <span class="metric-value" id="outVolume">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Items base</span>
+              <span class="metric-value" id="outItems">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Adders</span>
+              <span class="metric-value" id="outAdders">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">True cost floor</span>
+              <span class="metric-value" id="outFloor">—</span>
+            </div>
+          </div>
+
+          <div class="price-stack">
+            <div class="price-row">
+              <div>
+                <strong>Customer subtotal</strong>
+                <span class="price-note" id="outModeNote">—</span>
+              </div>
+              <span class="price-amt" id="outSubtotal">—</span>
+            </div>
+            <div class="price-row recommend">
+              <div>
+                <strong>Recommended charge</strong>
+                <span class="price-note" id="outRecNote">—</span>
+              </div>
+              <span class="price-amt big" id="outRecommend">—</span>
+            </div>
+          </div>
+
+          <div class="range-box">
+            <span>Margin after true costs</span>
+            <strong id="outMargin">—</strong>
+            <span class="muted" id="outMarginPct">—</span>
+          </div>
+
+          <h3 class="subhead">Line items</h3>
+          <table class="lines"><tbody id="lineBody"></tbody></table>
+        </section>
+
+        <section class="card quote-card">
+          <h2>Customer text</h2>
+          <textarea id="quoteText" rows="14" readonly></textarea>
+          <div class="header-actions" style="margin-top:0.75rem">
+            <button type="button" class="btn primary" id="btnCopy">Copy quote</button>
+            <button type="button" class="btn ghost" id="btnPrint">Print / PDF</button>
+          </div>
+          <p class="toast" id="toast" hidden>Copied</p>
+        </section>
+      </main>
+    </div>
+
+    <!-- RATE CARD -->
+    <div class="tab-panel" id="panel-rates">
+      <main class="grid">
+        <section class="card full">
+          <h2>Volume rates (customer-facing)</h2>
+          <p class="hint">
+            Residential one-off = retail. Commercial one-off = retail + admin/access premium (~15%).
+            Recurring = contracted multi-visit discount (~20% off residential).
+          </p>
+          <div class="table-wrap">
+            <table class="edit-table" id="volumeTable">
+              <thead>
+                <tr>
+                  <th>Load</th>
+                  <th>One-off res $</th>
+                  <th>One-off com $</th>
+                  <th>Recurring $</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="card full">
+          <h2>Per-item rates</h2>
+          <p class="hint">Edit any cell; Save defaults to keep. Commercial one-off defaults ~15% above residential.</p>
+          <div class="table-wrap">
+            <table class="edit-table" id="itemRateTable">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>One-off res $</th>
+                  <th>One-off com $</th>
+                  <th>Recurring $</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="row3" style="margin-top:1rem">
+            <label class="field">
+              <span>Min fee — one-off residential</span>
+              <input type="number" id="minFeeOneOff" min="0" step="1" value="95" />
+            </label>
+            <label class="field">
+              <span>Min fee — one-off commercial</span>
+              <input type="number" id="minFeeCommercial" min="0" step="1" value="125" />
+            </label>
+            <label class="field">
+              <span>Min fee — recurring</span>
+              <input type="number" id="minFeeRecurring" min="0" step="1" value="75" />
+            </label>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- TRUE COSTS -->
+    <div class="tab-panel" id="panel-costs">
+      <main class="grid">
+        <section class="card">
+          <h2>Your cost inputs (not customer prices)</h2>
+          <p class="hint">Used only for the cost floor and margin check. $25/hr is labor cost — not what you charge.</p>
+          <div class="fields">
+            <div class="row2">
+              <label class="field">
+                <span>Labor cost ($/hr, you + helper blended)</span>
+                <input type="number" id="laborCostRate" min="0" step="1" value="25" />
+              </label>
+              <label class="field">
+                <span>Mileage cost ($/mile)</span>
+                <input type="number" id="mileCost" min="0" step="0.01" value="0.35" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Lead cost this job ($)</span>
+                <input type="number" id="leadCost" min="0" step="1" value="0" />
+              </label>
+              <label class="field">
+                <span>Lead cost multiplier (e.g. 3×)</span>
+                <input type="number" id="leadMult" min="1" step="0.1" value="3" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Trailer rental ($/day)</span>
+                <input type="number" id="truckDayCost" min="0" step="1" value="125" />
+              </label>
+              <label class="field">
+                <span>Days charged to this job</span>
+                <input type="number" id="truckDays" min="0" step="0.25" value="0.5" title="1 = full rental day; 0.5 = half day share if you run 2 jobs same day" />
+              </label>
+            </div>
+            <div class="row3">
+              <label class="field">
+                <span>Target margin one-off res (%)</span>
+                <input type="number" id="targetMarginOneOff" min="0" step="1" value="50" />
+              </label>
+              <label class="field">
+                <span>Target margin one-off com (%)</span>
+                <input type="number" id="targetMarginCommercial" min="0" step="1" value="55" />
+              </label>
+              <label class="field">
+                <span>Target margin recurring (%)</span>
+                <input type="number" id="targetMarginRecurring" min="0" step="1" value="35" />
+              </label>
+            </div>
+            <div class="row2">
+              <label class="field">
+                <span>Overhead per job ($ flat)</span>
+                <input type="number" id="overheadFlat" min="0" step="1" value="15" />
+              </label>
+              <label class="field">
+                <span>Landfill mattress fee ($ each)</span>
+                <input type="number" id="mattressDumpFee" min="0" step="1" value="20" title="Pass-through when mattress qty &gt; 0 in Items" />
+              </label>
+            </div>
+            <p class="hint">Paint $/gal is set on the Job quote Adders card (default $7.50). Mattress fee only applies when mattress is in Items.</p>
+          </div>
+        </section>
+        <section class="card">
+          <h2>Cost floor recipe</h2>
+          <ul class="guide-list">
+            <li><strong>Labor</strong> = hours × labor cost rate</li>
+            <li><strong>Miles</strong> = round-trip miles × $/mile</li>
+            <li><strong>Dump</strong> = landfill fees + mattress fees</li>
+            <li><strong>Lead recovery</strong> = lead cost × multiplier (if you paid for the lead)</li>
+            <li><strong>Truck</strong> = day rate × days allocated</li>
+            <li><strong>Overhead</strong> = flat admin / insurance slice</li>
+            <li><strong>Floor</strong> = sum of above — never quote below this</li>
+            <li><strong>Healthy quote</strong> ≈ floor ÷ (1 − target margin%)</li>
+          </ul>
+          <div class="price-row recommend" style="margin-top:1rem">
+            <div>
+              <strong>Cost-plus target (this job)</strong>
+              <span class="price-note">What rate card should clear</span>
+            </div>
+            <span class="price-amt big" id="outCostPlus">—</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- GUIDE -->
+    <div class="tab-panel" id="panel-guide">
+      <main class="grid">
+        <section class="card full guide">
+          <h2>Four job types</h2>
+          <div class="compare compare-4">
+            <div>
+              <h3>One-off residential</h3>
+              <ul>
+                <li>Full retail rates</li>
+                <li>Min ~$95</li>
+                <li>Target margin ~45–55%</li>
+                <li>Home cleanouts, move-outs</li>
+                <li>Card / cash often same day</li>
+              </ul>
+            </div>
+            <div>
+              <h3>One-off commercial</h3>
+              <ul>
+                <li>~10–15% above residential</li>
+                <li>Min ~$125</li>
+                <li>Target margin ~50–55%</li>
+                <li>Office purge, retail remodel, one-time site clean</li>
+                <li>COI, docks, Net 15/30, after-hours — price it</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recurring residential</h3>
+              <ul>
+                <li>~20% off res retail</li>
+                <li>Min ~$75 if real volume</li>
+                <li>Target margin ~30–40%</li>
+                <li>HOA bulk days, estate multi-visit</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Recurring commercial</h3>
+              <ul>
+                <li>Same recurring rate card</li>
+                <li>Contract: load cap + overage</li>
+                <li>Property managers, storage, offices</li>
+                <li>Invoice terms; still full dump/heavy adders</li>
+              </ul>
+            </div>
+          </div>
+          <p class="hint">
+            One-off commercial is <strong>not</strong> the same as one-off residential. Liability, certificates of insurance,
+            loading docks, elevators, after-hours access, and slower pay all cost you — the commercial rate card covers that.
+            Don’t give commercial customers residential pricing “to win the job.”
+          </p>
+
+          <h2>When to use which price</h2>
+          <ul class="guide-list">
+            <li><strong>1–3 known items</strong> → per-item (or min fee if sum is tiny)</li>
+            <li><strong>Mixed pile / garage / estate</strong> → volume tiers</li>
+            <li><strong>Hybrid</strong> → default: customer pays the <em>higher</em> of item total vs volume (protects you when pile is “a few” expensive items)</li>
+            <li><strong>Brush / yard only</strong> → cubic yard rate + dump (separate from furniture tiers)</li>
+          </ul>
+
+          <h2>Sanity check on your current card</h2>
+          <ul class="guide-list">
+            <li>Volume ladder (⅛ $150 → full $600) is in a competitive independent range for Austin-area trailer work; nationals often run higher on full loads.</li>
+            <li>Per-item furniture/appliances look reasonable; sofa $95 and fridge $75–95 are usable if access is easy.</li>
+            <li><strong>$25/hr is a cost rate, not a customer rate.</strong> Never sell the job as $25/hr — you’ll lose on dump and drive time.</li>
+            <li><strong>3× lead cost</strong> belongs in the floor: if a lead cost $40, recover $120 in the quote before profit.</li>
+            <li><strong>$.35/mile</strong> is fine as cost; for long one-off trips consider a trip minimum or zone fee.</li>
+            <li>Landfill mattress fee ($20 default) auto-adds only when Mattress qty is set under Items — pass-through, don’t eat WM fees.</li>
+            <li>Paint disposal is <strong>$7.50/gallon</strong> at the dump — enter gallons under Adders; fee only appears when gallons &gt; 0.</li>
+            <li><strong>Hazmat / special handling</strong> is a flat fee for extra work (mess, packing, chemicals, HHW trip) — separate from paint $/gal.</li>
+            <li><strong>Breakdown / demo / extraction</strong> covers furniture breakdown, light demo, and digging material out of dirt (pylons, buried wood, posts).</li>
+            <li>Full trailer $480 recurring vs $600 one-off is a clean ~20% loyalty discount — good structure.</li>
+          </ul>
+
+          <h2>Recurring contract tips</h2>
+          <ul class="guide-list">
+            <li>Define: pickup day, max load per visit, what’s excluded (hazmat, concrete, dirt).</li>
+            <li>Overage: if they exceed contracted ¼ load → charge next tier or per ⅛ overage.</li>
+            <li>No-show / cancel &lt;12h: half minimum.</li>
+            <li>Review rates every 6–12 months (dump fees move).</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <p>
+        Customer price comes from your rate card + adders. True cost floor uses labor, miles, dump, lead recovery, truck share, overhead.
+        Edit the Rate card and True costs tabs, then Save defaults.
+      </p>
+      <p class="muted">
+        Demo jobs: <code>Documents\Demo-Job-Pricer</code> · Junk: <code>Documents\Junk-Haul-Pricer</code>
+      </p>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("../sw.js", { scope: "../" }).catch(function () {});
+    }
+  </script>
+</body>
+</html>

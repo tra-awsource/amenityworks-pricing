@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e1210" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AW Pricing" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>AmenityWorks Pricing</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="hub.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <p class="eyebrow">AmenityWorks · Austin</p>
+      <h1>Pricing</h1>
+      <p class="sub">Your job calculators — optimized for phone. Tap an app, then <strong>Add to Home Screen</strong> for one-tap access.</p>
+    </header>
+
+    <nav class="cards" aria-label="Apps">
+      <a class="card card-junk" href="junk/index.html">
+        <span class="badge">Junk</span>
+        <h2>Junk Haul Pricer</h2>
+        <p>Volume, items, one-off / commercial / recurring, hazmat, paint, extraction.</p>
+        <span class="go">Open →</span>
+      </a>
+      <a class="card card-demo" href="demo/index.html">
+        <span class="badge">Demo</span>
+        <h2>Demo Job Pricer</h2>
+        <p>Deck tear-down, labor + trailer + dump, family vs market, quote text.</p>
+        <span class="go">Open →</span>
+      </a>
+    </nav>
+
+    <section class="howto">
+      <h3>Use on your phone</h3>
+      <ol>
+        <li>On your PC, run <code>Start-Mobile-Server.ps1</code> (or double-click it).</li>
+        <li>Phone on the <strong>same Wi‑Fi</strong> — open the URL it shows (e.g. <code>http://192.168.x.x:8080</code>).</li>
+        <li><strong>iPhone:</strong> Share → Add to Home Screen.<br />
+            <strong>Android:</strong> Menu → Install app / Add to Home screen.</li>
+      </ol>
+      <p class="note">Saved rates stay on <em>this browser</em> (phone and PC are separate unless you re-enter once on phone and Save defaults).</p>
+      <p class="status" id="status">Server not required if you already have a public URL — bookmark that instead.</p>
+    </section>
+
+    <footer>
+      <p>Offline-capable after first load on this network. Data stays in your browser (localStorage).</p>
+    </footer>
+  </div>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(function () {});
+    }
+  </script>
+</body>
+</html>

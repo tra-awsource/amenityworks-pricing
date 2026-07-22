@@ -1,0 +1,183 @@
+:root {
+  --bg: #0c100e;
+  --card: #1a2420;
+  --border: #2e3d36;
+  --text: #e8f2ec;
+  --muted: #8fa398;
+  --green: #4ecf8a;
+  --blue: #5eb0f0;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shell {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: calc(1.25rem + var(--safe-top)) calc(1.1rem + var(--safe-right))
+    calc(2rem + var(--safe-bottom)) calc(1.1rem + var(--safe-left));
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+  font-size: 1.85rem;
+  letter-spacing: -0.03em;
+}
+
+.sub {
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.15rem 1.2rem 1.2rem;
+  transition: transform 0.12s, border-color 0.12s;
+  min-height: 7.5rem;
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+.card-junk {
+  border-color: #2a6048;
+  background: linear-gradient(145deg, #152820, #1a2420);
+}
+
+.card-demo {
+  border-color: #2a5080;
+  background: linear-gradient(145deg, #152030, #1a2228);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+  background: #00000044;
+  color: var(--green);
+  margin-bottom: 0.45rem;
+}
+
+.card-demo .badge {
+  color: var(--blue);
+}
+
+.card h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.go {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--green);
+}
+
+.card-demo .go {
+  color: var(--blue);
+}
+
+.howto {
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #141a17;
+}
+
+.howto h3 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+}
+
+.howto ol {
+  margin: 0 0 0.75rem;
+  padding-left: 1.2rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.howto li {
+  margin-bottom: 0.45rem;
+}
+
+.howto code {
+  font-size: 0.8em;
+  background: #0c100e;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.note,
+.status {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+footer {
+  margin-top: 1.5rem;
+  font-size: 0.78rem;
+  color: #6a7a72;
+}
+
+footer p {
+  margin: 0;
+}
