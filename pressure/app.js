@@ -1,34 +1,219 @@
 /**
- * Pressure washing pricing calculator (Pressure Wash Pro)
- * Rates saved to localStorage; tweak under Rates to match your market.
+ * AmenityWorks Power Washing — Pressure Wash Pro quote builder
+ * Catalog matches the AmenityWorks Power Washing Price Sheet.
+ * Rates (midpoints of sheet ranges) saved to localStorage under Rates.
  */
 
-const STORAGE_KEY = "pw-pricing-settings-v1";
+const STORAGE_KEY = "pw-pricing-settings-v2";
+const CATALOG_VERSION = 2;
 
+/** Midpoint helper for sheet ranges */
+const mid = (a, b) => Math.round(((a + b) / 2) * 1000) / 1000;
+
+/**
+ * AmenityWorks Power Washing Price Sheet
+ * rate = default bid (mid of range when a range is given)
+ * rateMin / rateMax = sheet range for reference
+ */
 const DEFAULT_SERVICES = [
-  { id: "house_wash", name: "House wash (soft wash)", unit: "sq ft", rate: 0.28 },
-  { id: "driveway", name: "Driveway / concrete", unit: "sq ft", rate: 0.22 },
-  { id: "sidewalk", name: "Sidewalk / walkway", unit: "sq ft", rate: 0.25 },
-  { id: "patio_deck", name: "Patio / deck", unit: "sq ft", rate: 0.35 },
-  { id: "fence", name: "Fence", unit: "linear ft", rate: 1.5 },
-  { id: "roof", name: "Roof soft wash", unit: "sq ft", rate: 0.45 },
-  { id: "gutter", name: "Gutter brightening", unit: "linear ft", rate: 2.0 },
-  { id: "fleet", name: "Fleet / vehicle", unit: "each", rate: 45 },
-  { id: "commercial", name: "Commercial lot", unit: "sq ft", rate: 0.12 },
-  { id: "custom", name: "Custom / other", unit: "flat", rate: 0 },
+  // —— Residential ——
+  {
+    id: "driveway",
+    name: "Driveways",
+    unit: "sq ft",
+    rate: mid(0.2, 0.3),
+    rateMin: 0.2,
+    rateMax: 0.3,
+    group: "Residential",
+  },
+  {
+    id: "walkways",
+    name: "Walkways",
+    unit: "sq ft",
+    rate: 0.25,
+    rateMin: 0.25,
+    rateMax: 0.25,
+    group: "Residential",
+  },
+  {
+    id: "house_wash",
+    name: "House Wash (Soft Wash)",
+    unit: "sq ft",
+    rate: mid(0.25, 0.3),
+    rateMin: 0.25,
+    rateMax: 0.3,
+    group: "Residential",
+  },
+  {
+    id: "patios",
+    name: "Patios / Porches",
+    unit: "sq ft",
+    rate: mid(0.25, 0.35),
+    rateMin: 0.25,
+    rateMax: 0.35,
+    group: "Residential",
+  },
+  {
+    id: "pool_decks",
+    name: "Pool Decks",
+    unit: "sq ft",
+    rate: mid(0.3, 0.4),
+    rateMin: 0.3,
+    rateMax: 0.4,
+    group: "Residential",
+  },
+  {
+    id: "roof",
+    name: "Roof Soft Wash",
+    unit: "sq ft",
+    rate: mid(0.35, 0.6),
+    rateMin: 0.35,
+    rateMax: 0.6,
+    group: "Residential",
+  },
+
+  // —— Commercial & Multifamily ——
+  {
+    id: "flat_work",
+    name: "Flat Work (Hallways, Breezeways, Walkways)",
+    unit: "sq ft",
+    rate: mid(0.13, 0.18),
+    rateMin: 0.13,
+    rateMax: 0.18,
+    group: "Commercial & Multifamily",
+    heavyAdd: 0.05, // Heavy Soiled Areas: +$0.05 / sq ft
+  },
+  {
+    id: "heavy_soiled_sqft",
+    name: "Heavy Soiled Areas (add-on)",
+    unit: "sq ft",
+    rate: 0.05,
+    rateMin: 0.05,
+    rateMax: 0.05,
+    group: "Commercial & Multifamily",
+  },
+  {
+    id: "ceilings_std",
+    name: "Ceilings — 3-Story Standard (8 ft)",
+    unit: "building",
+    rate: mid(75, 150),
+    rateMin: 75,
+    rateMax: 150,
+    group: "Commercial & Multifamily",
+  },
+  {
+    id: "ceilings_high",
+    name: "Ceilings — Entry/High (24–30 ft)",
+    unit: "building",
+    rate: mid(200, 350),
+    rateMin: 200,
+    rateMax: 350,
+    group: "Commercial & Multifamily",
+  },
+  {
+    id: "no_water",
+    name: "No Water On Site (add-on)",
+    unit: "sq ft",
+    rate: 0.03,
+    rateMin: 0.03,
+    rateMax: 0.03,
+    group: "Commercial & Multifamily",
+  },
+  {
+    id: "travel_sqft",
+    name: "Travel Outside Austin (add-on)",
+    unit: "sq ft",
+    rate: mid(0.02, 0.05),
+    rateMin: 0.02,
+    rateMax: 0.05,
+    group: "Commercial & Multifamily",
+  },
+
+  // —— Stairwells (stairs ≈ 6 sq ft each) ——
+  {
+    id: "stairs",
+    name: "Stairwells — Treads & Landings",
+    unit: "stair",
+    rate: mid(2, 3),
+    rateMin: 2,
+    rateMax: 3,
+    group: "Stairwells",
+    heavyAdd: 0.5, // Heavily Soiled Add-on: +$0.50 per stair
+    note: "Stairs ≈ 6 sq ft each · per level",
+  },
+  {
+    id: "stairs_heavy",
+    name: "Stairwells — Heavily Soiled Add-on",
+    unit: "stair",
+    rate: 0.5,
+    rateMin: 0.5,
+    rateMax: 0.5,
+    group: "Stairwells",
+  },
+
+  // —— Additional Services ——
+  {
+    id: "chemical",
+    name: "Chemical Treatment",
+    unit: "treatment",
+    rate: mid(25, 75),
+    rateMin: 25,
+    rateMax: 75,
+    group: "Additional Services",
+  },
+  {
+    id: "rust",
+    name: "Rust Removal (quoted on-site)",
+    unit: "flat",
+    rate: 0,
+    rateMin: 0,
+    rateMax: 0,
+    group: "Additional Services",
+    quotedOnSite: true,
+  },
+  {
+    id: "oil_stain",
+    name: "Oil Stain Treatment",
+    unit: "spot",
+    rate: mid(15, 50),
+    rateMin: 15,
+    rateMax: 50,
+    group: "Additional Services",
+  },
+  {
+    id: "gum",
+    name: "Gum Removal",
+    unit: "spot",
+    rate: mid(1, 2),
+    rateMin: 1,
+    rateMax: 2,
+    group: "Additional Services",
+  },
+  {
+    id: "custom",
+    name: "Custom / other",
+    unit: "flat",
+    rate: 0,
+    rateMin: 0,
+    rateMax: 0,
+    group: "Additional Services",
+  },
 ];
 
 const DEFAULT_SETTINGS = {
-  businessName: "Pressure Wash Pro",
+  catalogVersion: CATALOG_VERSION,
+  businessName: "AmenityWorks",
   minJobFee: 150,
-  multipliers: { light: 1.0, medium: 1.25, heavy: 1.5 },
+  // Sheet uses explicit heavy add-ons (+$0.05/sq ft, +$0.50/stair).
+  // Multipliers stay at 1.0 so they don't stack unless you raise them under Rates.
+  multipliers: { light: 1.0, medium: 1.0, heavy: 1.0 },
   services: DEFAULT_SERVICES.map((s) => ({ ...s })),
 };
 
 /** @type {typeof DEFAULT_SETTINGS} */
 let settings = loadSettings();
 
-/** @type {{ id: string, serviceId: string, quantity: number, condition: string }[]} */
+/** @type {{ id: string, serviceId: string, quantity: number|string, condition: string, rate: number|string|null }[]} */
 let lines = [];
 
 // ——— DOM ———
@@ -68,17 +253,52 @@ function loadSettings() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return structuredClone(DEFAULT_SETTINGS);
     const parsed = JSON.parse(raw);
+
+    // Force new price-sheet catalog when version changes
+    if (parsed.catalogVersion !== CATALOG_VERSION) {
+      return {
+        ...structuredClone(DEFAULT_SETTINGS),
+        businessName: parsed.businessName || DEFAULT_SETTINGS.businessName,
+        minJobFee: parsed.minJobFee ?? DEFAULT_SETTINGS.minJobFee,
+      };
+    }
+
+    const services =
+      Array.isArray(parsed.services) && parsed.services.length
+        ? mergeServices(parsed.services)
+        : structuredClone(DEFAULT_SERVICES);
+
     return {
       ...structuredClone(DEFAULT_SETTINGS),
       ...parsed,
+      catalogVersion: CATALOG_VERSION,
       multipliers: { ...DEFAULT_SETTINGS.multipliers, ...(parsed.multipliers || {}) },
-      services: Array.isArray(parsed.services) && parsed.services.length
-        ? parsed.services
-        : structuredClone(DEFAULT_SERVICES),
+      services,
     };
   } catch {
     return structuredClone(DEFAULT_SETTINGS);
   }
+}
+
+/** Keep saved rates/min-max if same service id still exists */
+function mergeServices(saved) {
+  const byId = new Map(saved.map((s) => [s.id, s]));
+  return DEFAULT_SERVICES.map((def) => {
+    const prev = byId.get(def.id);
+    if (!prev) return { ...def };
+    return {
+      ...def,
+      rate: prev.rate != null ? Number(prev.rate) : def.rate,
+      rateMin: def.rateMin,
+      rateMax: def.rateMax,
+      name: def.name,
+      unit: def.unit,
+      group: def.group,
+      heavyAdd: def.heavyAdd,
+      quotedOnSite: def.quotedOnSite,
+      note: def.note,
+    };
+  });
 }
 
 function saveSettings() {
@@ -86,13 +306,31 @@ function saveSettings() {
 }
 
 function applyBusinessName() {
-  els.businessNameDisplay.textContent = settings.businessName || "Pressure Wash Pro";
-  document.title = `${settings.businessName || "Pressure Wash Pro"} · AmenityWorks`;
+  els.businessNameDisplay.textContent = settings.businessName || "AmenityWorks";
+  document.title = `${settings.businessName || "AmenityWorks"} · Pressure Wash Pro`;
 }
 
-// ——— Money helpers ———
+// ——— Money / rate helpers ———
 const money = (n) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n || 0);
+
+function formatRate(n) {
+  const x = Number(n) || 0;
+  if (x >= 10) return x.toFixed(2);
+  if (x >= 1) return x.toFixed(2);
+  return x.toFixed(2);
+}
+
+function rangeLabel(svc) {
+  const min = Number(svc.rateMin);
+  const max = Number(svc.rateMax);
+  if (svc.quotedOnSite) return "On-site";
+  if (Number.isFinite(min) && Number.isFinite(max) && min !== max) {
+    return `$${formatRate(min)}–$${formatRate(max)}`;
+  }
+  if (Number.isFinite(min)) return `$${formatRate(min)}`;
+  return `$${formatRate(svc.rate)}`;
+}
 
 function getService(id) {
   return settings.services.find((s) => s.id === id) || settings.services[0];
@@ -105,15 +343,37 @@ function conditionMult(key) {
   return m.light;
 }
 
+function effectiveRate(line, svc) {
+  if (line.rate !== null && line.rate !== "" && line.rate !== undefined) {
+    return Math.max(0, Number(line.rate) || 0);
+  }
+  return Math.max(0, Number(svc.rate) || 0);
+}
+
 function lineAmount(line) {
   const svc = getService(line.serviceId);
   const qty = Math.max(0, Number(line.quantity) || 0);
-  const rate = Number(svc.rate) || 0;
+  const rate = effectiveRate(line, svc);
+
+  // Flat / custom = amount entered in quantity field
   if (svc.unit === "flat") {
-    // Flat = custom total entered in quantity field
     return qty * conditionMult(line.condition);
   }
-  return qty * rate * conditionMult(line.condition);
+
+  let amount = qty * rate;
+
+  // Sheet-style heavy add-ons (e.g. +$0.05/sq ft, +$0.50/stair)
+  if (svc.heavyAdd != null && Number(svc.heavyAdd) > 0) {
+    if (line.condition === "heavy") {
+      amount += qty * Number(svc.heavyAdd);
+    } else if (line.condition === "medium") {
+      amount += qty * Number(svc.heavyAdd) * 0.5;
+    }
+  } else {
+    amount *= conditionMult(line.condition);
+  }
+
+  return amount;
 }
 
 function computeQuote() {
@@ -160,12 +420,52 @@ function uid() {
   return `L${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
 
+function unitLabelFor(svc) {
+  if (svc.unit === "flat") return "Amount ($)";
+  if (svc.unit === "stair") return "Qty (stairs)";
+  if (svc.unit === "building") return "Qty (buildings)";
+  if (svc.unit === "treatment") return "Qty (treatments)";
+  if (svc.unit === "spot") return "Qty (spots)";
+  return `Qty (${svc.unit})`;
+}
+
+function fillServiceSelect(select, selectedId) {
+  select.innerHTML = "";
+  const groups = [];
+  const map = new Map();
+  for (const s of settings.services) {
+    const g = s.group || "Other";
+    if (!map.has(g)) {
+      map.set(g, []);
+      groups.push(g);
+    }
+    map.get(g).push(s);
+  }
+  for (const g of groups) {
+    const og = document.createElement("optgroup");
+    og.label = g;
+    for (const s of map.get(g)) {
+      const opt = document.createElement("option");
+      opt.value = s.id;
+      const unitBit = s.unit === "flat" ? "custom" : s.unit;
+      const sheet = rangeLabel(s);
+      opt.textContent = `${s.name} · ${sheet}/${unitBit}`;
+      if (s.id === selectedId) opt.selected = true;
+      og.appendChild(opt);
+    }
+    select.appendChild(og);
+  }
+}
+
 function addServiceLine(preset = {}) {
+  const serviceId = preset.serviceId || "driveway";
+  const svc = getService(serviceId);
   lines.push({
     id: uid(),
-    serviceId: preset.serviceId || settings.services[0].id,
+    serviceId,
     quantity: preset.quantity ?? "",
     condition: preset.condition || "light",
+    rate: preset.rate != null ? preset.rate : svc.rate,
   });
   renderServiceLines();
   recalc();
@@ -187,25 +487,36 @@ function renderServiceLines() {
     row.className = "service-line";
     row.dataset.id = line.id;
 
-    const unitLabel =
-      svc.unit === "flat" ? "Amount ($)" : `Qty (${svc.unit})`;
+    const rateVal =
+      line.rate !== null && line.rate !== "" && line.rate !== undefined
+        ? line.rate
+        : svc.rate;
+    const sheetHint = rangeLabel(svc);
+    const heavyHint =
+      svc.heavyAdd != null && Number(svc.heavyAdd) > 0
+        ? ` · heavy +$${formatRate(svc.heavyAdd)}/${svc.unit}`
+        : "";
 
     row.innerHTML = `
-      <label class="field">
+      <label class="field field-service">
         <span>Service</span>
         <select data-field="serviceId" aria-label="Service type"></select>
       </label>
       <label class="field">
         <span>Condition</span>
         <select data-field="condition" aria-label="Soil condition">
-          <option value="light">Light</option>
+          <option value="light">Light (base)</option>
           <option value="medium">Medium</option>
-          <option value="heavy">Heavy / mold</option>
+          <option value="heavy">Heavy / soiled</option>
         </select>
       </label>
       <label class="field">
-        <span class="qty-label">${unitLabel}</span>
-        <input type="number" data-field="quantity" min="0" step="any" placeholder="0" value="${line.quantity}" />
+        <span class="qty-label">${unitLabelFor(svc)}</span>
+        <input type="number" data-field="quantity" min="0" step="any" placeholder="0" value="${line.quantity}" inputmode="decimal" />
+      </label>
+      <label class="field">
+        <span>Rate ($)<small class="rate-sheet"> sheet ${sheetHint}${heavyHint}</small></span>
+        <input type="number" data-field="rate" min="0" step="any" value="${rateVal}" inputmode="decimal" ${svc.unit === "flat" && !svc.quotedOnSite ? "" : ""} />
       </label>
       <div class="field">
         <span>Line total</span>
@@ -217,22 +528,26 @@ function renderServiceLines() {
     `;
 
     const select = row.querySelector('[data-field="serviceId"]');
-    for (const s of settings.services) {
-      const opt = document.createElement("option");
-      opt.value = s.id;
-      opt.textContent = `${s.name} · $${Number(s.rate).toFixed(2)}/${s.unit === "flat" ? "custom" : s.unit}`;
-      if (s.id === line.serviceId) opt.selected = true;
-      select.appendChild(opt);
-    }
+    fillServiceSelect(select, line.serviceId);
 
     row.querySelector('[data-field="condition"]').value = line.condition;
 
     row.querySelector('[data-field="serviceId"]').addEventListener("change", (e) => {
       line.serviceId = e.target.value;
       const newSvc = getService(line.serviceId);
+      line.rate = newSvc.rate;
       const qtyLabel = row.querySelector(".qty-label");
-      qtyLabel.textContent =
-        newSvc.unit === "flat" ? "Amount ($)" : `Qty (${newSvc.unit})`;
+      qtyLabel.textContent = unitLabelFor(newSvc);
+      const rateInput = row.querySelector('[data-field="rate"]');
+      rateInput.value = newSvc.rate;
+      const sheetEl = row.querySelector(".rate-sheet");
+      if (sheetEl) {
+        const h =
+          newSvc.heavyAdd != null && Number(newSvc.heavyAdd) > 0
+            ? ` · heavy +$${formatRate(newSvc.heavyAdd)}/${newSvc.unit}`
+            : "";
+        sheetEl.textContent = ` sheet ${rangeLabel(newSvc)}${h}`;
+      }
       recalc();
       updateLineTotal(row, line);
     });
@@ -245,6 +560,12 @@ function renderServiceLines() {
 
     row.querySelector('[data-field="quantity"]').addEventListener("input", (e) => {
       line.quantity = e.target.value === "" ? "" : Number(e.target.value);
+      recalc();
+      updateLineTotal(row, line);
+    });
+
+    row.querySelector('[data-field="rate"]').addEventListener("input", (e) => {
+      line.rate = e.target.value === "" ? "" : Number(e.target.value);
       recalc();
       updateLineTotal(row, line);
     });
@@ -273,14 +594,20 @@ function recalc() {
       .map(({ line, svc, amount }) => {
         const cond =
           line.condition === "medium"
-            ? " · medium soil"
+            ? " · medium"
             : line.condition === "heavy"
-              ? " · heavy soil"
+              ? " · heavy / soiled"
               : "";
-        const qtyPart =
-          svc.unit === "flat"
-            ? "custom"
-            : `${Number(line.quantity) || 0} ${svc.unit}${cond}`;
+        const rate = effectiveRate(line, svc);
+        let qtyPart;
+        if (svc.unit === "flat") {
+          qtyPart = svc.quotedOnSite ? "on-site / custom" : "custom";
+        } else {
+          qtyPart = `${Number(line.quantity) || 0} ${svc.unit} @ $${formatRate(rate)}${cond}`;
+        }
+        if (svc.heavyAdd && line.condition === "heavy") {
+          qtyPart += ` (+$${formatRate(svc.heavyAdd)} ${svc.unit} heavy)`;
+        }
         return `
           <div class="quote-line">
             <div class="ql-label"><strong>${escapeHtml(svc.name)}</strong>${escapeHtml(qtyPart)}</div>
@@ -292,13 +619,12 @@ function recalc() {
     if (q.travel > 0) {
       els.quoteLines.innerHTML += `
         <div class="quote-line">
-          <div class="ql-label"><strong>Travel / trip fee</strong></div>
+          <div class="ql-label"><strong>Travel / trip fee (flat)</strong></div>
           <div class="ql-price">${money(q.travel)}</div>
         </div>`;
     }
   }
 
-  // Refresh line totals in form
   document.querySelectorAll(".service-line").forEach((row) => {
     const id = row.dataset.id;
     const line = lines.find((l) => l.id === id);
@@ -329,20 +655,23 @@ function buildQuoteText() {
   const contact = els.customerContact.value.trim();
   const address = els.jobAddress.value.trim();
   const notes = els.quoteNotes.value.trim();
-  const biz = settings.businessName || "Pressure Wash Pro";
+  const biz = settings.businessName || "AmenityWorks";
 
   const linesText = q.serviceItems
     .map(({ line, svc, amount }) => {
+      const rate = effectiveRate(line, svc);
       const qty =
         svc.unit === "flat"
-          ? "custom"
-          : `${Number(line.quantity) || 0} ${svc.unit}`;
+          ? svc.quotedOnSite
+            ? "quoted on-site"
+            : "custom"
+          : `${Number(line.quantity) || 0} ${svc.unit} @ $${formatRate(rate)}`;
       const cond = line.condition !== "light" ? ` (${line.condition})` : "";
       return `  • ${svc.name}: ${qty}${cond} — ${money(amount)}`;
     })
     .join("\n");
 
-  let text = `${biz} — Quote\n`;
+  let text = `${biz} — Power Washing Quote\n`;
   text += `Prepared: ${new Date().toLocaleDateString()}\n\n`;
   text += `Customer: ${name}\n`;
   if (contact) text += `Contact: ${contact}\n`;
@@ -365,7 +694,6 @@ async function copyQuote() {
     await navigator.clipboard.writeText(text);
     els.copyStatus.textContent = "Quote copied to clipboard";
   } catch {
-    // Fallback
     const ta = document.createElement("textarea");
     ta.value = text;
     document.body.appendChild(ta);
@@ -385,14 +713,17 @@ function printQuote() {
   const contact = els.customerContact.value.trim();
   const address = els.jobAddress.value.trim();
   const notes = els.quoteNotes.value.trim();
-  const biz = settings.businessName || "Pressure Wash Pro";
+  const biz = settings.businessName || "AmenityWorks";
 
   const rows = q.serviceItems
     .map(({ line, svc, amount }) => {
+      const rate = effectiveRate(line, svc);
       const qty =
         svc.unit === "flat"
-          ? "Custom"
-          : `${Number(line.quantity) || 0} ${svc.unit}${line.condition !== "light" ? ` · ${line.condition}` : ""}`;
+          ? svc.quotedOnSite
+            ? "Quoted on-site"
+            : "Custom"
+          : `${Number(line.quantity) || 0} ${svc.unit} @ $${formatRate(rate)}${line.condition !== "light" ? ` · ${line.condition}` : ""}`;
       return `<tr><td>${escapeHtml(svc.name)}<br><small>${escapeHtml(qty)}</small></td><td>${money(amount)}</td></tr>`;
     })
     .join("");
@@ -405,7 +736,7 @@ function printQuote() {
   els.printSheet.innerHTML = `
     <h1>${escapeHtml(biz)}</h1>
     <div class="meta">
-      Quote · ${new Date().toLocaleDateString()}<br>
+      Power Washing Quote · ${new Date().toLocaleDateString()}<br>
       Customer: ${escapeHtml(name)}
       ${contact ? `<br>Contact: ${escapeHtml(contact)}` : ""}
       ${address ? `<br>Job site: ${escapeHtml(address)}` : ""}
@@ -444,25 +775,41 @@ function closeSettings() {
 
 function renderRatesTable() {
   els.ratesTableBody.innerHTML = "";
+  let lastGroup = "";
   for (const s of settings.services) {
+    if (s.group && s.group !== lastGroup) {
+      lastGroup = s.group;
+      const trG = document.createElement("tr");
+      trG.className = "rates-group-row";
+      trG.innerHTML = `<td colspan="4">${escapeHtml(s.group)}</td>`;
+      els.ratesTableBody.appendChild(trG);
+    }
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${escapeHtml(s.name)}</td>
+      <td>${escapeHtml(s.name)}${s.note ? `<br><small class="muted">${escapeHtml(s.note)}</small>` : ""}${
+        s.heavyAdd != null
+          ? `<br><small class="muted">Heavy condition +$${formatRate(s.heavyAdd)}/${escapeHtml(s.unit)}</small>`
+          : ""
+      }</td>
       <td>${escapeHtml(s.unit)}</td>
-      <td><input type="number" min="0" step="0.01" data-rate-id="${s.id}" value="${s.rate}" /></td>
+      <td class="sheet-range">${escapeHtml(rangeLabel(s))}</td>
+      <td><input type="number" min="0" step="0.01" data-rate-id="${s.id}" value="${s.rate}" ${
+        s.quotedOnSite ? 'title="Enter bid after on-site quote"' : ""
+      } /></td>
     `;
     els.ratesTableBody.appendChild(tr);
   }
 }
 
 function persistSettingsFromForm() {
-  settings.businessName = els.businessName.value.trim() || "Pressure Wash Pro";
+  settings.businessName = els.businessName.value.trim() || "AmenityWorks";
   settings.minJobFee = Math.max(0, Number(els.minJobFee.value) || 0);
   settings.multipliers = {
     light: Math.max(0.1, Number(els.multLight.value) || 1),
-    medium: Math.max(0.1, Number(els.multMedium.value) || 1.25),
-    heavy: Math.max(0.1, Number(els.multHeavy.value) || 1.5),
+    medium: Math.max(0.1, Number(els.multMedium.value) || 1),
+    heavy: Math.max(0.1, Number(els.multHeavy.value) || 1),
   };
+  settings.catalogVersion = CATALOG_VERSION;
   els.ratesTableBody.querySelectorAll("[data-rate-id]").forEach((input) => {
     const id = input.dataset.rateId;
     const svc = settings.services.find((s) => s.id === id);
@@ -470,16 +817,23 @@ function persistSettingsFromForm() {
   });
   saveSettings();
   applyBusinessName();
+  // Refresh line rates only when still matching old default? Keep per-line overrides.
   renderServiceLines();
   recalc();
   closeSettings();
 }
 
 function resetDefaults() {
-  if (!confirm("Restore default rates and multipliers? Your saved rates will be replaced.")) {
+  if (
+    !confirm(
+      "Restore AmenityWorks price-sheet defaults (midpoints of published ranges)? Your saved rates will be replaced."
+    )
+  ) {
     return;
   }
+  const name = settings.businessName;
   settings = structuredClone(DEFAULT_SETTINGS);
+  settings.businessName = name || DEFAULT_SETTINGS.businessName;
   saveSettings();
   openSettings();
   applyBusinessName();
@@ -498,7 +852,7 @@ function clearJob() {
   els.quoteNotes.value = "";
   renderServiceLines();
   recalc();
-  addServiceLine();
+  addServiceLine({ serviceId: "driveway", quantity: "", condition: "light" });
 }
 
 // ——— Events ———

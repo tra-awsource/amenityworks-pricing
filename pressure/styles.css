@@ -329,11 +329,42 @@ textarea {
   gap: 0.75rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   .service-line {
-    grid-template-columns: 1.4fr 0.7fr 0.85fr 0.85fr auto;
+    grid-template-columns: 1.5fr 0.75fr 0.7fr 0.75fr 0.7fr auto;
     align-items: end;
   }
+}
+
+.service-line .rate-sheet {
+  display: block;
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.rates-group-row td {
+  background: rgba(14, 165, 233, 0.1);
+  color: var(--primary-hover);
+  font-weight: 650;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-top: 0.75rem !important;
+}
+
+.sheet-range {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.rates-table small.muted {
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
 .service-line .line-total {

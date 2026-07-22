@@ -43,8 +43,8 @@
           </svg>
         </div>
         <div>
-          <h1 id="businessNameDisplay">Pressure Wash Pro</h1>
-          <p class="tagline">Pricing calculator &amp; quote builder</p>
+          <h1 id="businessNameDisplay">AmenityWorks</h1>
+          <p class="tagline">Power Washing price sheet · quote builder</p>
         </div>
       </div>
       <div class="header-actions">
@@ -90,7 +90,7 @@
         <h2>Adjustments</h2>
         <div class="grid-3">
           <label class="field">
-            <span>Travel / trip fee ($)</span>
+            <span>Travel / trip fee ($ flat)</span>
             <input type="number" id="travelFee" min="0" step="1" value="0" />
           </label>
           <label class="field">
@@ -148,20 +148,21 @@
           <span>Minimum job fee ($)</span>
           <input type="number" id="minJobFee" min="0" step="1" />
         </label>
-        <p class="section-label">Default rates (edit to match your pricing)</p>
+        <p class="section-label">AmenityWorks price sheet (edit default bid rate)</p>
         <div class="rates-table-wrap">
           <table class="rates-table" id="ratesTable">
             <thead>
               <tr>
                 <th>Service</th>
                 <th>Unit</th>
-                <th>Rate ($)</th>
+                <th>Sheet range</th>
+                <th>Your rate ($)</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
-        <p class="section-label">Condition multipliers</p>
+        <p class="section-label">Condition multipliers (optional)</p>
         <div class="grid-3">
           <label class="field">
             <span>Light soil</span>
@@ -176,7 +177,11 @@
             <input type="number" id="multHeavy" min="0.5" max="3" step="0.05" />
           </label>
         </div>
-        <p class="hint">Tip: House wash is often bid per story or sq ft of wall; driveways by sq ft. Soft wash (house/roof) usually costs more per unit than hard surface pressure washing.</p>
+        <p class="hint">
+          Defaults follow the AmenityWorks sheet (midpoint of each range). Flat work + stairs apply sheet heavy add-ons
+          when Condition = Heavy (+$0.05/sq ft or +$0.50/stair). Prefer the Heavy Soiled / Travel Outside Austin /
+          No Water lines for those add-ons. Multipliers default to 1.0 so they don’t double-count.
+        </p>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn btn-ghost" id="btnResetDefaults">Restore defaults</button>
