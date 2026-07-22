@@ -41,25 +41,18 @@
     </nav>
 
     <section class="howto">
-      <h3>Access from anywhere</h3>
-      <p class="note" style="margin-bottom:0.75rem">
-        Live site:
-        <a href="https://tra-awsource.github.io/amenityworks-pricing/" style="color:#4ecf8a;word-break:break-all">
-          https://tra-awsource.github.io/amenityworks-pricing/
-        </a>
-      </p>
+      <h3>On your phone</h3>
       <ol>
-        <li>Open that link on your phone (cellular or any Wi‑Fi).</li>
         <li><strong>iPhone (Safari):</strong> Share → <strong>Add to Home Screen</strong>.</li>
         <li><strong>Android (Chrome):</strong> Menu → <strong>Install app</strong> / Add to Home screen.</li>
-        <li>Open Junk or Demo once → set rates → <strong>Save defaults</strong> (stored on this device).</li>
       </ol>
-      <p class="note">Rates stay in your browser only. The site is password-protected — share the password only with people you trust. Change it via <a href="set-password.html" style="color:#4ecf8a">set-password.html</a> + update <code>access-config.js</code>.</p>
-      <p class="note"><button type="button" id="aw-lock-btn" style="margin-top:0.5rem;min-height:2.5rem;padding:0.4rem 0.9rem;border-radius:8px;border:1px solid #2e3d36;background:#141a17;color:#e8f2ec;font-weight:600;cursor:pointer">Lock / log out</button></p>
+      <p class="note">
+        <button type="button" id="aw-lock-btn" style="margin-top:0.35rem;min-height:2.5rem;padding:0.4rem 0.9rem;border-radius:8px;border:1px solid #2e3d36;background:#141a17;color:#e8f2ec;font-weight:600;cursor:pointer">Lock / log out</button>
+      </p>
     </section>
 
     <footer>
-      <p>Password required. Data stays in your browser (localStorage).</p>
+      <p>AmenityWorks · authorized use only</p>
     </footer>
     <script>
       document.getElementById("aw-lock-btn")?.addEventListener("click", function () {
