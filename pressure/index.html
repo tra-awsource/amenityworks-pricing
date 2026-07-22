@@ -3,12 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0c100e" />
+  <meta name="theme-color" content="#0b1220" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Pressure Wash Pricer · AmenityWorks</title>
+  <meta name="description" content="Pressure washing pricing calculator and quote builder" />
+  <title>Pressure Wash Pro · AmenityWorks</title>
   <link rel="manifest" href="../manifest.webmanifest" />
   <link rel="apple-touch-icon" href="../icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="../mobile-shared.css" />
   <link rel="stylesheet" href="../access-gate.css" />
@@ -19,76 +23,171 @@
   <div class="app">
     <nav class="mobile-nav" aria-label="App navigation">
       <a href="../index.html">← Home</a>
-      <span class="nav-title">Pressure Wash</span>
+      <span class="nav-title">Pressure Wash Pro</span>
       <a href="../window/index.html">Windows</a>
     </nav>
 
-    <header>
-      <p class="eyebrow">AmenityWorks · Owner tool</p>
-      <h1>Pressure Wash Pricer</h1>
-      <p class="subtitle">
-        Sq-ft estimates for breezeways, concrete, exteriors. Default $0.15/sq ft · recurring 10% off.
-      </p>
+    <header class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="url(#g)"/>
+            <path d="M10 22c4-8 8-10 10-10s6 2 10 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M12 26c3-5 6-6.5 8-6.5s5 1.5 8 6.5" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+            <circle cx="20" cy="28" r="2" fill="#7dd3fc"/>
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="40" y2="40">
+                <stop stop-color="#0ea5e9"/><stop offset="1" stop-color="#0369a1"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <h1 id="businessNameDisplay">Pressure Wash Pro</h1>
+          <p class="tagline">Pricing calculator &amp; quote builder</p>
+        </div>
+      </div>
       <div class="header-actions">
-        <button type="button" class="btn ghost" id="btnReset">Reset</button>
-        <button type="button" class="btn ghost" id="btnSave">Save defaults</button>
+        <button type="button" class="btn btn-ghost" id="btnSettings" title="Edit rates &amp; business info">
+          <span class="btn-icon">⚙</span> Rates
+        </button>
+        <button type="button" class="btn btn-ghost" id="btnReset">Clear</button>
       </div>
     </header>
 
-    <section class="panel">
-      <h2>Job inputs</h2>
-      <div class="field">
-        <label for="pc-sqft">Square footage</label>
-        <input id="pc-sqft" type="number" min="1" max="500000" step="1" value="5000" inputmode="decimal" />
-      </div>
-      <div class="field">
-        <label for="pc-rate">Rate ($ / sq ft)</label>
-        <input id="pc-rate" type="number" min="0.05" max="2" step="0.01" value="0.15" inputmode="decimal" />
-      </div>
-      <div class="field">
-        <label for="pc-property">Property type</label>
-        <select id="pc-property">
-          <option value="Multifamily / apartment">Multifamily / apartment</option>
-          <option value="HOA / community">HOA / community</option>
-          <option value="Home / residential">Home / residential</option>
-          <option value="Commercial / office">Commercial / office</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="pc-surface">Primary surface</label>
-        <select id="pc-surface">
-          <option value="Breezeways / common concrete">Breezeways / common concrete</option>
-          <option value="Stairwells / landings">Stairwells / landings</option>
-          <option value="Driveways / sidewalks">Driveways / sidewalks</option>
-          <option value="Building exterior">Building exterior</option>
-          <option value="Mixed surfaces">Mixed surfaces</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="pc-frequency">Frequency</label>
-        <select id="pc-frequency">
-          <option value="one-time">One-time (full rate)</option>
-          <option value="quarterly">Quarterly (10% off)</option>
-          <option value="semiannual">Twice yearly (10% off)</option>
-          <option value="annual">Annual program (10% off)</option>
-        </select>
-      </div>
-      <p class="note">Min job: $150 one-time · $125 recurring. Heavy algae may need a higher rate after review.</p>
-    </section>
+    <main class="main">
+      <!-- Customer & job -->
+      <section class="card">
+        <h2>Job details</h2>
+        <div class="grid-2">
+          <label class="field">
+            <span>Customer name</span>
+            <input type="text" id="customerName" placeholder="Jane Smith" autocomplete="name" />
+          </label>
+          <label class="field">
+            <span>Phone / email</span>
+            <input type="text" id="customerContact" placeholder="Optional" />
+          </label>
+          <label class="field full">
+            <span>Job address</span>
+            <input type="text" id="jobAddress" placeholder="123 Main St" />
+          </label>
+        </div>
+      </section>
 
-    <section class="panel result">
-      <h2>Estimate</h2>
-      <div class="line"><span>Effective rate</span><strong id="pc-rate-out">$0.15 / sq ft</strong></div>
-      <div class="line"><span>Area subtotal</span><strong id="pc-subtotal">$0.00</strong></div>
-      <div class="line"><span>Minimum job</span><strong id="pc-minimum">$150.00</strong></div>
-      <div class="line" id="pc-savings-row" hidden>
-        <span>Recurring savings</span><strong id="pc-savings" class="save">$0.00</strong>
-      </div>
-      <div class="total"><span>Total</span><strong id="pc-total">$0.00</strong></div>
-      <p class="note" id="pc-summary"></p>
-      <button type="button" class="btn" id="pc-copy">Copy estimate text</button>
-    </section>
+      <!-- Services -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Services</h2>
+          <button type="button" class="btn btn-primary btn-sm" id="btnAddService">+ Add service</button>
+        </div>
+        <div id="serviceLines" class="service-lines"></div>
+        <p class="hint" id="emptyServicesHint">Add at least one service to build a quote.</p>
+      </section>
+
+      <!-- Adjustments -->
+      <section class="card">
+        <h2>Adjustments</h2>
+        <div class="grid-3">
+          <label class="field">
+            <span>Travel / trip fee ($)</span>
+            <input type="number" id="travelFee" min="0" step="1" value="0" />
+          </label>
+          <label class="field">
+            <span>Discount (%)</span>
+            <input type="number" id="discountPct" min="0" max="100" step="1" value="0" />
+          </label>
+          <label class="field">
+            <span>Tax / sales tax (%)</span>
+            <input type="number" id="taxPct" min="0" max="30" step="0.1" value="0" />
+          </label>
+        </div>
+        <label class="field notes-field">
+          <span>Notes (shown on quote)</span>
+          <textarea id="quoteNotes" rows="2" placeholder="e.g. Soft wash on siding · Includes mold treatment · Valid 14 days"></textarea>
+        </label>
+      </section>
+
+      <!-- Quote summary -->
+      <aside class="card quote-card" id="quoteCard">
+        <h2>Quote summary</h2>
+        <div id="quoteLines" class="quote-lines"></div>
+        <div class="totals">
+          <div class="total-row"><span>Subtotal</span><span id="subtotalDisplay">$0.00</span></div>
+          <div class="total-row muted" id="discountRow" hidden><span>Discount</span><span id="discountDisplay">−$0.00</span></div>
+          <div class="total-row muted" id="taxRow" hidden><span>Tax</span><span id="taxDisplay">$0.00</span></div>
+          <div class="total-row grand"><span>Total</span><span id="totalDisplay">$0.00</span></div>
+          <p class="min-note" id="minNote" hidden>Minimum job fee applied</p>
+        </div>
+        <div class="quote-actions">
+          <button type="button" class="btn btn-primary" id="btnCopy">Copy quote</button>
+          <button type="button" class="btn btn-secondary" id="btnPrint">Print / PDF</button>
+        </div>
+        <p class="copy-status" id="copyStatus" aria-live="polite"></p>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <p>AmenityWorks owner tool · Rates stay in this browser only. Adjust under <strong>Rates</strong>.</p>
+    </footer>
   </div>
+
+  <!-- Settings modal -->
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal" role="dialog" aria-labelledby="settingsTitle" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Business &amp; rates</h2>
+        <button type="button" class="btn btn-ghost btn-icon-only" id="btnCloseSettings" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <label class="field">
+          <span>Business name</span>
+          <input type="text" id="businessName" />
+        </label>
+        <label class="field">
+          <span>Minimum job fee ($)</span>
+          <input type="number" id="minJobFee" min="0" step="1" />
+        </label>
+        <p class="section-label">Default rates (edit to match your pricing)</p>
+        <div class="rates-table-wrap">
+          <table class="rates-table" id="ratesTable">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Unit</th>
+                <th>Rate ($)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="section-label">Condition multipliers</p>
+        <div class="grid-3">
+          <label class="field">
+            <span>Light soil</span>
+            <input type="number" id="multLight" min="0.5" max="3" step="0.05" />
+          </label>
+          <label class="field">
+            <span>Medium soil</span>
+            <input type="number" id="multMedium" min="0.5" max="3" step="0.05" />
+          </label>
+          <label class="field">
+            <span>Heavy / mold</span>
+            <input type="number" id="multHeavy" min="0.5" max="3" step="0.05" />
+          </label>
+        </div>
+        <p class="hint">Tip: House wash is often bid per story or sq ft of wall; driveways by sq ft. Soft wash (house/roof) usually costs more per unit than hard surface pressure washing.</p>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="btnResetDefaults">Restore defaults</button>
+        <button type="button" class="btn btn-primary" id="btnSaveSettings">Save rates</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print-only quote sheet -->
+  <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
+
   <script src="app.js"></script>
 </body>
 </html>

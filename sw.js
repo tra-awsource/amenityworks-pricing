@@ -1,5 +1,5 @@
 /* AmenityWorks Pricing — offline cache for local/network use */
-const CACHE = "aw-pricing-v4";
+const CACHE = "aw-pricing-v5";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -17,6 +17,12 @@ const PRECACHE = [
   "./demo/index.html",
   "./demo/styles.css",
   "./demo/app.js",
+  "./pressure/index.html",
+  "./pressure/styles.css",
+  "./pressure/app.js",
+  "./window/index.html",
+  "./window/styles.css",
+  "./window/app.js",
   "./mobile-shared.css",
 ];
 
