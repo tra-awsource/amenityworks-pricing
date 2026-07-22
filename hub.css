@@ -90,6 +90,26 @@ h1 {
   background: linear-gradient(145deg, #152030, #1a2228);
 }
 
+.card-pressure {
+  border-color: #3a5a7a;
+  background: linear-gradient(145deg, #152530, #1a2428);
+}
+
+.card-window {
+  border-color: #4a4a70;
+  background: linear-gradient(145deg, #1a1830, #222028);
+}
+
+.card-pressure .badge,
+.card-pressure .go {
+  color: #7ec8ff;
+}
+
+.card-window .badge,
+.card-window .go {
+  color: #c4b5fd;
+}
+
 .badge {
   display: inline-block;
   font-size: 0.68rem;

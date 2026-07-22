@@ -1,0 +1,170 @@
+:root {
+  --bg: #0c100e;
+  --card: #1a2420;
+  --elev: #141a17;
+  --border: #2e3d36;
+  --text: #e8f2ec;
+  --muted: #8fa398;
+  --green: #4ecf8a;
+  --yellow: #e6c35c;
+  --blue: #5eb0f0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.app {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+h1 {
+  margin: 0.25rem 0 0.35rem;
+  font-size: 1.55rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 1.05rem 1.15rem;
+  margin-bottom: 0.85rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.field {
+  margin-bottom: 0.75rem;
+}
+
+.field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--elev);
+  color: var(--text);
+  padding: 0.55rem 0.75rem;
+  font-size: 1rem;
+}
+
+.note {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 0.25rem 0 0;
+}
+
+.result {
+  background: linear-gradient(160deg, #152820, #1a2420);
+  border: 1px solid #2a6048;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #2e3d36;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.line strong {
+  color: var(--text);
+}
+
+.line .save {
+  color: var(--green);
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0.85rem 0 0.65rem;
+  font-size: 1rem;
+}
+
+.total strong {
+  color: var(--yellow);
+  font-size: 1.55rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.85rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  background: var(--green);
+  color: #062214;
+  margin-top: 0.5rem;
+}
+
+.btn:active {
+  opacity: 0.9;
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: auto;
+  padding: 0.45rem 0.85rem;
+  min-height: 2.4rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 0.85rem;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c100e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Window Wash Pricer · AmenityWorks</title>
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="../icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../mobile-shared.css" />
+  <link rel="stylesheet" href="../access-gate.css" />
+  <script src="../access-config.js"></script>
+  <script src="../access-gate.js"></script>
+</head>
+<body>
+  <div class="app">
+    <nav class="mobile-nav" aria-label="App navigation">
+      <a href="../index.html">← Home</a>
+      <span class="nav-title">Window Wash</span>
+      <a href="../pressure/index.html">Pressure</a>
+    </nav>
+
+    <header>
+      <p class="eyebrow">AmenityWorks · Owner tool</p>
+      <h1>Window Wash Pricer</h1>
+      <p class="subtitle">
+        $8 one-time · $7.50 recurring per window. Ground / short ladder only · max 2 stories.
+        Homes, offices, apartments.
+      </p>
+      <div class="header-actions">
+        <button type="button" class="btn ghost" id="btnReset">Reset</button>
+        <button type="button" class="btn ghost" id="btnSave">Save defaults</button>
+      </div>
+    </header>
+
+    <section class="panel">
+      <h2>Job inputs</h2>
+      <div class="field">
+        <label for="wc-windows">Number of windows</label>
+        <input id="wc-windows" type="number" min="1" max="5000" step="1" value="20" inputmode="numeric" />
+      </div>
+      <div class="field">
+        <label for="wc-property">Property type</label>
+        <select id="wc-property">
+          <option value="Home">Home / residential</option>
+          <option value="Apartment">Apartment / multifamily</option>
+          <option value="Office">Office building</option>
+          <option value="Commercial">Other commercial</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="wc-stories">Height</label>
+        <select id="wc-stories">
+          <option value="1">1 story (ground)</option>
+          <option value="2">2 stories (short ladder OK)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="wc-frequency">Frequency</label>
+        <select id="wc-frequency">
+          <option value="one-time">One-time ($8.00)</option>
+          <option value="quarterly">Quarterly recurring ($7.50)</option>
+          <option value="monthly">Monthly recurring ($7.50)</option>
+          <option value="biweekly">Every 2 weeks ($7.50)</option>
+        </select>
+      </div>
+      <p class="note">No high-rise / lift work on this tier. Min job: $100 one-time · $75 recurring.</p>
+    </section>
+
+    <section class="panel result">
+      <h2>Estimate</h2>
+      <div class="line"><span>Rate</span><strong id="wc-rate">$8.00 / window</strong></div>
+      <div class="line"><span>Window subtotal</span><strong id="wc-subtotal">$0.00</strong></div>
+      <div class="line"><span>Minimum job</span><strong id="wc-minimum">$100.00</strong></div>
+      <div class="line" id="wc-savings-row" hidden>
+        <span>Recurring savings</span><strong id="wc-savings" class="save">$0.00</strong>
+      </div>
+      <div class="total"><span>Total</span><strong id="wc-total">$0.00</strong></div>
+      <p class="note" id="wc-summary"></p>
+      <button type="button" class="btn" id="wc-copy">Copy estimate text</button>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

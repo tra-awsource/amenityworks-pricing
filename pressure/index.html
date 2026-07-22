@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c100e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Pressure Wash Pricer · AmenityWorks</title>
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="../icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../mobile-shared.css" />
+  <link rel="stylesheet" href="../access-gate.css" />
+  <script src="../access-config.js"></script>
+  <script src="../access-gate.js"></script>
+</head>
+<body>
+  <div class="app">
+    <nav class="mobile-nav" aria-label="App navigation">
+      <a href="../index.html">← Home</a>
+      <span class="nav-title">Pressure Wash</span>
+      <a href="../window/index.html">Windows</a>
+    </nav>
+
+    <header>
+      <p class="eyebrow">AmenityWorks · Owner tool</p>
+      <h1>Pressure Wash Pricer</h1>
+      <p class="subtitle">
+        Sq-ft estimates for breezeways, concrete, exteriors. Default $0.15/sq ft · recurring 10% off.
+      </p>
+      <div class="header-actions">
+        <button type="button" class="btn ghost" id="btnReset">Reset</button>
+        <button type="button" class="btn ghost" id="btnSave">Save defaults</button>
+      </div>
+    </header>
+
+    <section class="panel">
+      <h2>Job inputs</h2>
+      <div class="field">
+        <label for="pc-sqft">Square footage</label>
+        <input id="pc-sqft" type="number" min="1" max="500000" step="1" value="5000" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label for="pc-rate">Rate ($ / sq ft)</label>
+        <input id="pc-rate" type="number" min="0.05" max="2" step="0.01" value="0.15" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label for="pc-property">Property type</label>
+        <select id="pc-property">
+          <option value="Multifamily / apartment">Multifamily / apartment</option>
+          <option value="HOA / community">HOA / community</option>
+          <option value="Home / residential">Home / residential</option>
+          <option value="Commercial / office">Commercial / office</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="pc-surface">Primary surface</label>
+        <select id="pc-surface">
+          <option value="Breezeways / common concrete">Breezeways / common concrete</option>
+          <option value="Stairwells / landings">Stairwells / landings</option>
+          <option value="Driveways / sidewalks">Driveways / sidewalks</option>
+          <option value="Building exterior">Building exterior</option>
+          <option value="Mixed surfaces">Mixed surfaces</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="pc-frequency">Frequency</label>
+        <select id="pc-frequency">
+          <option value="one-time">One-time (full rate)</option>
+          <option value="quarterly">Quarterly (10% off)</option>
+          <option value="semiannual">Twice yearly (10% off)</option>
+          <option value="annual">Annual program (10% off)</option>
+        </select>
+      </div>
+      <p class="note">Min job: $150 one-time · $125 recurring. Heavy algae may need a higher rate after review.</p>
+    </section>
+
+    <section class="panel result">
+      <h2>Estimate</h2>
+      <div class="line"><span>Effective rate</span><strong id="pc-rate-out">$0.15 / sq ft</strong></div>
+      <div class="line"><span>Area subtotal</span><strong id="pc-subtotal">$0.00</strong></div>
+      <div class="line"><span>Minimum job</span><strong id="pc-minimum">$150.00</strong></div>
+      <div class="line" id="pc-savings-row" hidden>
+        <span>Recurring savings</span><strong id="pc-savings" class="save">$0.00</strong>
+      </div>
+      <div class="total"><span>Total</span><strong id="pc-total">$0.00</strong></div>
+      <p class="note" id="pc-summary"></p>
+      <button type="button" class="btn" id="pc-copy">Copy estimate text</button>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
