@@ -1,82 +1,53 @@
-# AmenityWorks Pricing — Phone Access
+# AmenityWorks Pricing — access from anywhere
 
-Both calculators live here:
+## Your live URL (HTTPS)
 
-`C:\Users\tracy\Documents\AmenityWorks-Pricing\`
+### **https://tra-awsource.github.io/amenityworks-pricing/**
 
-| App | Path |
-|-----|------|
-| Hub (home) | `index.html` |
-| Junk Haul | `junk\index.html` |
-| Demo / deck | `demo\index.html` |
+| Page | URL |
+|------|-----|
+| Hub | https://tra-awsource.github.io/amenityworks-pricing/ |
+| Junk Haul | https://tra-awsource.github.io/amenityworks-pricing/junk/ |
+| Demo Job | https://tra-awsource.github.io/amenityworks-pricing/demo/ |
 
----
-
-## Use on your phone (same Wi‑Fi)
-
-1. On the **PC**, double-click:
-
-   **`Start-Mobile-Server.bat`**
-
-2. Leave that window **open**.
-
-3. Note the line that looks like:
-
-   `On your phone:  http://192.168.x.x:8080/`
-
-4. On your **phone** (same Wi‑Fi), open Safari or Chrome and go to that address.
-
-5. **Add to Home Screen** (looks like an app icon):
-
-   - **iPhone (Safari):** Share button → **Add to Home Screen** → Add  
-   - **Android (Chrome):** Menu ⋮ → **Install app** or **Add to Home screen**
-
-6. Open **Junk** or **Demo** from the hub. Save defaults once on the phone so rates stick on that device.
+Repo: https://github.com/tra-awsource/amenityworks-pricing  
 
 ---
 
-## Important notes
+## Phone setup (once)
 
-| Topic | Detail |
-|--------|--------|
-| PC must be on | Server runs on your computer; phone talks to it over Wi‑Fi |
-| Same network | Phone and PC must share the same Wi‑Fi (not guest/VPN isolation) |
-| Windows Firewall | First run may ask to allow Python/PowerShell — choose **Private networks** |
-| Saved prices | Phone browser storage ≠ PC browser — set rates once on phone |
-| Offline | After first successful load, service worker may cache pages for short offline use on that network |
+1. Open the hub link above in Safari (iPhone) or Chrome (Android).
+2. **Add to Home Screen** / **Install app**.
+3. Open **Junk** or **Demo** → enter your rates → **Save defaults**.
+
+Works on cellular or any Wi‑Fi. No PC server needed.
 
 ---
 
-## Firewall (if phone cannot connect)
+## Notes
 
-1. Windows Security → Firewall → Allow an app  
-2. Allow **Python** or **PowerShell** on **Private** networks  
+| | |
+|--|--|
+| **Public site** | Anyone with the URL can open the tools (no login). |
+| **Your rates** | Stay in *that phone/browser* (localStorage) — not uploaded. |
+| **PC vs phone** | Save defaults separately on each device the first time. |
+| **Updates** | Edit files in `Documents\AmenityWorks-Pricing`, then push to GitHub (see below). |
 
-Or run once in Admin PowerShell:
+---
+
+## Update the live site after you change rates/code
 
 ```powershell
-New-NetFirewallRule -DisplayName "AmenityWorks Pricing 8080" -Direction Inbound -Protocol TCP -LocalPort 8080 -Action Allow -Profile Private
+cd C:\Users\tracy\Documents\AmenityWorks-Pricing
+git add -A
+git commit -m "Update pricing apps"
+git push
 ```
 
----
-
-## Access from anywhere (optional)
-
-Same-Wi‑Fi only works at home/shop. For access anywhere:
-
-1. Zip the `AmenityWorks-Pricing` folder  
-2. Deploy free static host (e.g. [Netlify Drop](https://app.netlify.com/drop) — drag the folder)  
-3. Open the HTTPS link on your phone → Add to Home Screen  
-
-Do **not** put private customer data in the apps if the URL is public; rates in localStorage stay on each device.
+GitHub Pages rebuilds in about 1 minute.
 
 ---
 
-## Desktop
+## Optional: PC-only local server
 
-You can still open:
-
-- Hub: `AmenityWorks-Pricing\index.html`  
-- Or run the server and use `http://localhost:8080/`
-
-Older copies in `Demo-Job-Pricer` and `Junk-Haul-Pricer` are snapshots; **use this hub folder going forward** so phone and PC stay in sync when you edit files.
+Still available: `Start-Mobile-Server.bat` (same Wi‑Fi only). Prefer the live URL for everyday use.
