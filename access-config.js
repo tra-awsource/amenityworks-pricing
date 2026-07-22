@@ -8,12 +8,12 @@
  *   3. Paste it below as passwordHash
  *   4. git add/commit/push
  *
- * Starter password (change this soon): ChangeMe-AW-2026
+ * 
  */
 window.AW_ACCESS = {
   // SHA-256 hex of the shared access password
   passwordHash:
-    "9673ae3141dc03c1c8a34b5278e5219bd456fefa35dd384e8912b8074dc2f8e7",
+    "ed230976b1cf12d4de8624428098f14c4c1c8a2510d16ef5ed95dbccdddfcb40",
   // How long the browser remembers a successful unlock (days)
   sessionDays: 30,
   // Storage key (change if you rotate everyone out at once)
