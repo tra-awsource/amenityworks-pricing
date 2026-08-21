@@ -620,6 +620,10 @@ button {
   padding: 1rem;
 }
 
+.modal-backdrop[hidden] {
+  display: none !important;
+}
+
 .modal {
   width: min(32rem, 100%);
   background: var(--bg-elevated);
@@ -634,6 +638,12 @@ button {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+}
+
+.modal-foot .hint {
+  margin: 0;
+  color: var(--success);
+  font-weight: 650;
 }
 
 .modal-head h2 {

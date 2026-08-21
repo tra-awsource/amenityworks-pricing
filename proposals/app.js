@@ -910,9 +910,14 @@ function saveCompany() {
     validityDays: Number(document.getElementById("coValidity").value) || 14,
   };
   saveJSON(COMPANY_KEY, company);
-  els.settingsModal.hidden = true;
+  const status = document.getElementById("companySaveStatus");
+  if (status) status.textContent = "Saved";
   renderProposal();
   flash("Company defaults saved");
+  window.setTimeout(() => {
+    els.settingsModal.hidden = true;
+    if (status) status.textContent = "";
+  }, 350);
 }
 
 els.editor.addEventListener("input", onEditorEvent);
