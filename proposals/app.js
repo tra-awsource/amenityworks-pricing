@@ -662,50 +662,57 @@ function renderProposal() {
     .filter(Boolean)
     .join(" · ");
 
+  const footerLabel = property ? `${property} Proposal` : "Proposal";
+
   els.proposal.innerHTML = `
-    ${state.isSample ? `<div class="sample-banner">Sample only — not a live bid</div>` : ""}
-    <header class="letterhead">
-      ${logoMarkup()}
-      <div class="co-name">AMENITYWORKS</div>
-      <div class="co-meta">
-        ${esc(company.name || "AmenityWorks LLC")}<br>
-        ${esc(company.address || "")}<br>
-        ${esc(company.phone || "")}${company.email ? ` · ${esc(company.email)}` : ""}
-      </div>
-      ${dateLine ? `<div class="doc-dates">${esc(dateLine)}</div>` : ""}
-    </header>
+    <table class="print-sheet">
+      <thead><tr><td></td></tr></thead>
+      <tfoot>
+        <tr><td><div class="print-foot">${esc(footerLabel)}</div></td></tr>
+      </tfoot>
+      <tbody>
+        <tr><td>
+          ${state.isSample ? `<div class="sample-banner">Sample only — not a live bid</div>` : ""}
+          <header class="letterhead">
+            ${logoMarkup()}
+            <div class="co-name">AMENITYWORKS</div>
+            <div class="co-meta">
+              ${esc(company.name || "AmenityWorks LLC")}<br>
+              ${esc(company.address || "")}<br>
+              ${esc(company.phone || "")}${company.email ? ` · ${esc(company.email)}` : ""}
+            </div>
+            ${dateLine ? `<div class="doc-dates">${esc(dateLine)}</div>` : ""}
+          </header>
 
-    <h1>${slot(property, "Property name")}</h1>
-    <p class="subtitle">${esc(t.titleKind)}<br>Submitted by ${esc(company.name || "AmenityWorks LLC")}</p>
-    ${metaRows ? `<table class="meta-table">${metaRows}</table>` : ""}
+          <p class="subtitle">${esc(t.titleKind)}<br>Submitted by ${esc(company.name || "AmenityWorks LLC")}</p>
+          ${metaRows ? `<table class="meta-table">${metaRows}</table>` : ""}
 
-    ${scopeBlock}
-    ${servicesBlock}
-    ${walkBlock}
-    ${stain}
-    ${pests}
-    ${waterIntrusionBlock}
-    ${additionalBlock}
-    ${waterDamageBlock}
-    ${timelineBlock}
-    ${residentBlock}
-    ${deliverablesBlock}
-    ${invest}
-    ${insuranceBlock}
-    ${others}
+          ${scopeBlock}
+          ${servicesBlock}
+          ${walkBlock}
+          ${stain}
+          ${pests}
+          ${waterIntrusionBlock}
+          ${additionalBlock}
+          ${waterDamageBlock}
+          ${timelineBlock}
+          ${residentBlock}
+          ${deliverablesBlock}
+          ${invest}
+          ${insuranceBlock}
+          ${others}
 
-    <p>Thank you for the opportunity to provide this proposal. We appreciate your consideration and look forward to partnering with you to keep ${
-      property ? slot(property, "property") : "your property"
-    } looking its best.</p>
+          <p>Thank you for the opportunity to provide this proposal. We appreciate your consideration and look forward to partnering with you to keep ${
+            property ? slot(property, "property") : "your property"
+          } looking its best.</p>
 
-    ${sign}
-
-    <div class="proposal-foot">
-      ${esc(company.name || "AmenityWorks LLC")} · ${esc(company.address || "")} · ${esc(company.phone || "")}
-    </div>
+          ${sign}
+        </td></tr>
+      </tbody>
+    </table>
   `;
 
-  document.title = property ? `${property} — AmenityWorks` : "AmenityWorks";
+  document.title = footerLabel;
   els.xeroTitle.value = xeroTitle();
   els.xeroText.value = xeroDescription();
 }

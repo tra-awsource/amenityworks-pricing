@@ -395,6 +395,36 @@ button {
   color: inherit;
 }
 
+.print-sheet {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.print-sheet > thead > tr > td,
+.print-sheet > tbody > tr > td,
+.print-sheet > tfoot > tr > td {
+  padding: 0;
+  vertical-align: top;
+  border: none;
+}
+
+.print-sheet > thead > tr > td {
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  overflow: hidden;
+}
+
+.print-foot {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: var(--paper-muted);
+  padding: 0.7rem 0 0.15rem;
+  border-top: 1px solid var(--rule);
+}
+
 .letterhead {
   display: flex;
   flex-direction: column;
@@ -453,16 +483,8 @@ button {
   text-align: center;
 }
 
-.proposal h1 {
-  margin: 1.15rem 0 0.35rem;
-  font-size: 1.45rem;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  text-align: center;
-}
-
 .proposal .subtitle {
-  margin: 0 0 0.9rem;
+  margin: 0.95rem 0 0.9rem;
   color: var(--paper-muted);
   font-size: 0.95rem;
   text-align: center;
@@ -726,7 +748,7 @@ button {
 @media print {
   @page {
     size: letter;
-    margin: 0.55in 0.62in 0.6in;
+    margin: 0;
   }
 
   html,
@@ -767,6 +789,14 @@ button {
     padding: 0 !important;
     border-radius: 0 !important;
     font-size: 10.4pt;
+  }
+
+  .print-sheet > tbody > tr > td {
+    padding: 0.55in 0.65in 0.2in;
+  }
+
+  .print-foot {
+    padding: 0.2in 0.65in 0.4in;
   }
 
   .proposal h2,
