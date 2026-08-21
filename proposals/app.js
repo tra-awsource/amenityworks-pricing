@@ -470,6 +470,15 @@ function xeroDescription() {
     blocks.push("Deliverables:");
     blocks.push("At completion, AmenityWorks will provide:");
     for (const d of deliverableList()) blocks.push(`-${d}`);
+    blocks.push("");
+  }
+
+  if (sectionOn("insurance")) {
+    blocks.push("Our Insurance:");
+    blocks.push("-General Liability");
+    blocks.push("-Workers Compensation");
+    blocks.push("-Umbrella");
+    blocks.push("-Commercial Auto");
   }
 
   return blocks.join("\n").replace(/\n{3,}/g, "\n\n");
@@ -640,6 +649,8 @@ function renderProposal() {
     <ul>
       <li>General Liability</li>
       <li>Workers Compensation</li>
+      <li>Umbrella</li>
+      <li>Commercial Auto</li>
     </ul>`
     : "";
 
