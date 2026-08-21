@@ -17,6 +17,7 @@ Same access password as the other pricing apps.
    - Breezeways & flatwork
    - Combined community clean
 2. Fill the yellow placeholders: property name, coverage, timeline, barrier cap, walkthrough notes.
+3. Under **Include on this proposal**, uncheck any section that does not apply (water damage, pest nests, barriers, etc.). Unchecked sections stay off the PDF and the Xero paste.
 3. Optional: add the same **investment lines** you will put in Xero.
 4. **Print / Save PDF** — in the print dialog choose Save as PDF. Email it or attach it to the Xero quote.
 5. **Copy Xero title** and **Copy Xero description** — paste into the Xero quote. Enter line items in Xero as usual.

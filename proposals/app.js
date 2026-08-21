@@ -109,6 +109,44 @@ const OTHER_SERVICES = [
   "Soft Washing Services",
 ];
 
+const SECTIONS = [
+  { id: "scope", label: "Scope of services", defaultOn: true },
+  { id: "services", label: "Services included", defaultOn: true },
+  { id: "walkthrough", label: "Walkthrough notes", defaultOn: true },
+  { id: "stains", label: "Note on stains", defaultOn: true },
+  { id: "pests", label: "Pest nests", defaultOn: false },
+  { id: "waterIntrusion", label: "Water intrusion prevention", defaultOn: true },
+  { id: "additionalMeasures", label: "Additional measures / barriers", defaultOn: true },
+  { id: "waterDamage", label: "Existing water damage observed", defaultOn: false },
+  { id: "timeline", label: "Estimated timeline", defaultOn: true },
+  { id: "residentImpact", label: "Resident & property impact", defaultOn: true },
+  { id: "deliverables", label: "Deliverables", defaultOn: true },
+  { id: "investment", label: "Investment", defaultOn: true },
+  { id: "insurance", label: "Insurance", defaultOn: true },
+  { id: "otherServices", label: "Other AmenityWorks services", defaultOn: true },
+  { id: "acceptance", label: "Signature / acceptance", defaultOn: true },
+];
+
+function defaultSections() {
+  const out = {};
+  for (const s of SECTIONS) out[s.id] = s.defaultOn;
+  return out;
+}
+
+function withSections(raw) {
+  const sections = defaultSections();
+  if (raw && raw.sections) Object.assign(sections, raw.sections);
+  if (raw && raw.includeStainNote === false) sections.stains = false;
+  if (raw && raw.pestNests === true) sections.pests = true;
+  if (raw && raw.includeOtherServices === false) sections.otherServices = false;
+  if (raw && raw.includeAcceptance === false) sections.acceptance = false;
+  return { ...(raw || {}), sections };
+}
+
+function sectionOn(id) {
+  return !!(state.sections && state.sections[id]);
+}
+
 function todayISO() {
   const d = new Date();
   const z = (n) => String(n).padStart(2, "0");
@@ -201,14 +239,11 @@ function blankState(templateId = "building_exteriors") {
     coverage: "",
     scopeExtra: "",
     walkthroughNotes: "",
-    includeStainNote: true,
-    pestNests: false,
     waterDamageNotes: "",
     barrierCap: t.barrierCap,
     workingDays: t.defaultDays,
     extraDeliverable: "",
-    includeOtherServices: true,
-    includeAcceptance: true,
+    sections: defaultSections(),
     lineItems: [],
   };
 }
@@ -223,13 +258,12 @@ function sampleState() {
   s.quoteNumber = "AWQ-SAMPLE";
   s.workingDays = "7";
   s.barrierCap = 4500;
-  s.includeStainNote = true;
   s.lineItems = [];
   return s;
 }
 
 let company = { ...DEFAULT_COMPANY, ...loadJSON(COMPANY_KEY, {}) };
-let state = { ...blankState(), ...loadJSON(DRAFT_KEY, {}) };
+let state = withSections({ ...blankState(), ...loadJSON(DRAFT_KEY, {}) });
 if (!TEMPLATES[state.templateId]) state.templateId = "building_exteriors";
 if (!state.surfaces) state.surfaces = defaultSurfaces(TEMPLATES[state.templateId].defaultSurfaces);
 
@@ -241,6 +275,7 @@ const els = {
   xeroText: document.getElementById("xeroText"),
   surfaceChips: document.getElementById("surfaceChips"),
   lineItems: document.getElementById("lineItems"),
+  sectionToggles: document.getElementById("sectionToggles"),
   templateHint: document.getElementById("templateHint"),
   savedSelect: document.getElementById("savedSelect"),
   copyStatus: document.getElementById("copyStatus"),
@@ -311,12 +346,8 @@ function slotMoney(n, placeholder) {
   return `<span class="slot">${money(v)}</span>`;
 }
 
-function logoSvg() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AmenityWorks">
-    <rect width="64" height="64" rx="14" fill="#0a1628"/>
-    <path d="M32 10 L50 50 H41.5 L38.2 42 H25.8 L22.5 50 H14 Z M32 22 L27.6 34 H36.4 Z" fill="#ffcc00"/>
-    <path d="M28 46 H36" stroke="#1aa3e8" stroke-width="3" stroke-linecap="round"/>
-  </svg>`;
+function logoMarkup() {
+  return `<img class="mark-img" src="logo.png" width="72" height="72" alt="AmenityWorks" />`;
 }
 
 function xeroTitle() {
@@ -339,90 +370,107 @@ function xeroDescription() {
     intro = `AmenityWorks will perform a comprehensive cleaning of ${property}. This service covers ${surfaces} ${coverage} and is designed to eliminate dirt, algae, mildew, mold, cobwebs, and other environmental contaminants, restoring a clean, professional appearance while helping preserve the integrity of the property's exterior surfaces.`;
   }
 
-  const blocks = [intro, ""];
+  const blocks = [];
 
-  const extra = (state.scopeExtra || "").trim();
-  if (extra) blocks.push(extra, "");
+  if (sectionOn("scope")) {
+    blocks.push(intro, "");
+    const extra = (state.scopeExtra || "").trim();
+    if (extra) blocks.push(extra, "");
+  }
 
-  blocks.push("Services will include:");
-  for (const s of t.services) blocks.push(`-${s}`);
-  blocks.push("");
+  if (sectionOn("services")) {
+    blocks.push("Services will include:");
+    for (const s of t.services) blocks.push(`-${s}`);
+    blocks.push("");
+  }
 
   const notes = (state.walkthroughNotes || "").trim();
-  if (notes) {
+  if (sectionOn("walkthrough") && notes) {
     blocks.push("Notes during site walkthrough:");
     blocks.push(notes);
     blocks.push("");
   }
 
-  if (state.includeStainNote) {
+  if (sectionOn("stains")) {
     blocks.push(
       "Note on stains: Some areas of the property contain heavy staining from long-term buildup. We will use industry-standard cleaning agents and low-pressure techniques to significantly reduce or eliminate these stains. However, certain deep or aged stains may remain slightly visible after cleaning. (If targeted stain cleaning is needed, discussions can be had and the quote/invoice price will change.)"
     );
     blocks.push("");
   }
 
-  if (state.pestNests) {
+  if (sectionOn("pests")) {
     blocks.push("Pest Nests:");
     blocks.push("Removal of pest nests require a discussion. Invoice price will change.");
     blocks.push("");
   }
 
-  blocks.push("Water Intrusion Prevention:");
-  blocks.push(
-    `AmenityWorks uses a low-pressure washing system designed specifically for ${t.systemContext}. This method uses controlled water flow and evacuation reducing:`
-  );
-  blocks.push("-Water pooling");
-  blocks.push("-Excess spray");
-  blocks.push(`-${t.pressureAgainst}`);
-  blocks.push("-Risk of unintended damage");
-  blocks.push("");
-
-  blocks.push("Additional Measures:");
-  blocks.push(`If we identify problem areas such as ${t.problemAreas} we will:`);
-  blocks.push("");
-  blocks.push("-Notify onsite staff immediately");
-  blocks.push("-Recommend temporary water barriers to protect units");
-  blocks.push("-Add barriers only if necessary and only with approval");
-  blocks.push(
-    `(Barriers are optional and billed as an add-on only if required and approved. Cost should not exceed ${capText} unless property has had extreme water intrusion events in the past)`
-  );
-  blocks.push("");
-
-  blocks.push("Existing Water Damage Observed:");
-  const waterNotes = (state.waterDamageNotes || "").trim();
-  if (waterNotes) {
-    blocks.push("Observed at this property:");
-    blocks.push(waterNotes);
+  if (sectionOn("waterIntrusion")) {
+    blocks.push("Water Intrusion Prevention:");
+    blocks.push(
+      `AmenityWorks uses a low-pressure washing system designed specifically for ${t.systemContext}. This method uses controlled water flow and evacuation reducing:`
+    );
+    blocks.push("-Water pooling");
+    blocks.push("-Excess spray");
+    blocks.push(`-${t.pressureAgainst}`);
+    blocks.push("-Risk of unintended damage");
     blocks.push("");
   }
-  blocks.push("While we cannot determine the exact cause without further inspection, common contributors include:");
-  blocks.push("-Failed door sweeps or weather seals");
-  blocks.push("-Gaps in thresholds");
-  blocks.push("-Heavy rainfall pushing water into unsealed entry points");
-  blocks.push("-Previous high-pressure washing performed by other vendors");
-  blocks.push("We will proceed cautiously in these areas and report any vulnerable spots before cleaning.");
-  blocks.push("");
 
-  blocks.push("Estimated Timeline:");
-  blocks.push(
-    "Due to the size of the project and variability of soil levels across buildings, the total duration may vary slightly. To avoid giving an inaccurate timeframe, we estimate:"
-  );
-  blocks.push("");
-  blocks.push(`~${days} working days`);
-  blocks.push("");
-  blocks.push("We will update management each day on progress so you always know where the team is working.");
-  blocks.push("");
+  if (sectionOn("additionalMeasures")) {
+    blocks.push("Additional Measures:");
+    blocks.push(`If we identify problem areas such as ${t.problemAreas} we will:`);
+    blocks.push("");
+    blocks.push("-Notify onsite staff immediately");
+    blocks.push("-Recommend temporary water barriers to protect units");
+    blocks.push("-Add barriers only if necessary and only with approval");
+    blocks.push(
+      `(Barriers are optional and billed as an add-on only if required and approved. Cost should not exceed ${capText} unless property has had extreme water intrusion events in the past)`
+    );
+    blocks.push("");
+  }
 
-  blocks.push("Resident & Property Impact:");
-  blocks.push("-Work can be performed during standard daylight hours");
-  blocks.push("-Safe for painted surfaces when using low pressure");
-  blocks.push("-Residents will be notified to keep items away from doors and walkways");
-  blocks.push("");
+  if (sectionOn("waterDamage")) {
+    blocks.push("Existing Water Damage Observed:");
+    const waterNotes = (state.waterDamageNotes || "").trim();
+    if (waterNotes) {
+      blocks.push("Observed at this property:");
+      blocks.push(waterNotes);
+      blocks.push("");
+    }
+    blocks.push("While we cannot determine the exact cause without further inspection, common contributors include:");
+    blocks.push("-Failed door sweeps or weather seals");
+    blocks.push("-Gaps in thresholds");
+    blocks.push("-Heavy rainfall pushing water into unsealed entry points");
+    blocks.push("-Previous high-pressure washing performed by other vendors");
+    blocks.push("We will proceed cautiously in these areas and report any vulnerable spots before cleaning.");
+    blocks.push("");
+  }
 
-  blocks.push("Deliverables:");
-  blocks.push("At completion, AmenityWorks will provide:");
-  for (const d of deliverableList()) blocks.push(`-${d}`);
+  if (sectionOn("timeline")) {
+    blocks.push("Estimated Timeline:");
+    blocks.push(
+      "Due to the size of the project and variability of soil levels across buildings, the total duration may vary slightly. To avoid giving an inaccurate timeframe, we estimate:"
+    );
+    blocks.push("");
+    blocks.push(`~${days} working days`);
+    blocks.push("");
+    blocks.push("We will update management each day on progress so you always know where the team is working.");
+    blocks.push("");
+  }
+
+  if (sectionOn("residentImpact")) {
+    blocks.push("Resident & Property Impact:");
+    blocks.push("-Work can be performed during standard daylight hours");
+    blocks.push("-Safe for painted surfaces when using low pressure");
+    blocks.push("-Residents will be notified to keep items away from doors and walkways");
+    blocks.push("");
+  }
+
+  if (sectionOn("deliverables")) {
+    blocks.push("Deliverables:");
+    blocks.push("At completion, AmenityWorks will provide:");
+    for (const d of deliverableList()) blocks.push(`-${d}`);
+  }
 
   return blocks.join("\n").replace(/\n{3,}/g, "\n\n");
 }
@@ -430,7 +478,6 @@ function xeroDescription() {
 function renderProposal() {
   const t = template();
   const property = (state.propertyName || "").trim();
-  const title = property ? `${property}: ${t.titleKind}` : t.titleKind;
   const lines = state.lineItems || [];
   const total = lines.reduce((sum, line) => sum + lineAmount(line), 0);
 
@@ -451,12 +498,12 @@ function renderProposal() {
   const waterNotes = (state.waterDamageNotes || "").trim();
   const extra = (state.scopeExtra || "").trim();
 
-  const stain = state.includeStainNote
+  const stain = sectionOn("stains")
     ? `<h2>Note on stains</h2>
       <p>Some areas of the property contain heavy staining from long-term buildup. We will use industry-standard cleaning agents and low-pressure techniques to significantly reduce or eliminate these stains. However, certain deep or aged stains may remain slightly visible after cleaning. If targeted stain cleaning is needed, discussions can be had and the quote/invoice price will change.</p>`
     : "";
 
-  const pests = state.pestNests
+  const pests = sectionOn("pests")
     ? `<h2>Pest nests</h2>
       <p>Removal of pest nests requires a discussion. Invoice price will change.</p>`
     : "";
@@ -477,22 +524,23 @@ function renderProposal() {
     })
     .join("");
 
-  const invest = lines.length
-    ? `<h2>Investment</h2>
+  const invest =
+    sectionOn("investment") && lines.length
+      ? `<h2>Investment</h2>
       <table class="invest">
         <thead><tr><th>Description</th><th>Quantity</th><th class="num">Amount</th></tr></thead>
         <tbody>${investRows}</tbody>
         <tfoot><tr><td colspan="2">Total investment</td><td class="num">${money(total)}</td></tr></tfoot>
       </table>
       <p>This total matches the accompanying Xero quote. Alternative payment plans (phased work with payment due after each phase) are available upon approval.</p>`
-    : "";
+      : "";
 
-  const others = state.includeOtherServices
+  const others = sectionOn("otherServices")
     ? `<h2>As your exterior maintenance partner, we also offer</h2>
       <ul>${OTHER_SERVICES.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>`
     : "";
 
-  const sign = state.includeAcceptance
+  const sign = sectionOn("acceptance")
     ? `<h2>Acceptance</h2>
       <p>To accept this proposal, approve the accompanying Xero quote or sign below. Work will be scheduled after written approval.</p>
       <div class="sign">
@@ -507,44 +555,26 @@ function renderProposal() {
       </div>`
     : "";
 
-  els.proposal.innerHTML = `
-    ${state.isSample ? `<div class="sample-banner">Sample only — not a live bid</div>` : ""}
-    <header class="letterhead">
-      <div class="mark">${logoSvg()}</div>
-      <div>
-        <div class="co-name">${esc(company.name || "AmenityWorks LLC")}</div>
-        <div class="co-meta">
-          ${esc(company.address || "")}<br>
-          ${esc(company.phone || "")}${company.email ? ` · ${esc(company.email)}` : ""}
-          ${company.website ? `<br>${esc(company.website)}` : ""}
-        </div>
-      </div>
-      <div class="doc-kicker">
-        <strong>PROPOSAL</strong>
-        <span>${esc(formatLongDate(state.quoteDate) || "")}</span>
-        ${state.validUntil ? `<span>Valid through ${esc(formatLongDate(state.validUntil))}</span>` : ""}
-        ${state.quoteNumber ? `<span>${esc(state.quoteNumber)}</span>` : ""}
-      </div>
-    </header>
-
-    <h1>${slot(property, "Property name")}: ${esc(t.titleKind)}</h1>
-    <p class="subtitle">Submitted by ${esc(company.name || "AmenityWorks LLC")}</p>
-    ${metaRows ? `<table class="meta-table">${metaRows}</table>` : ""}
-
-    <h2>Scope of services</h2>
+  const scopeBlock = sectionOn("scope")
+    ? `<h2>Scope of services</h2>
     <p>AmenityWorks will perform a comprehensive cleaning to remove organic buildup from ${slot(
       surfacePhrase(),
       "surfaces"
     )} ${slot(coveragePhrase(), "coverage")}. This service is designed to eliminate dirt, algae, mildew, mold, cobwebs, and other environmental contaminants, restoring a clean, professional appearance while helping preserve the integrity of the property's exterior surfaces.</p>
-    ${extra ? `<p>${nl2br(extra)}</p>` : ""}
+    ${extra ? `<p>${nl2br(extra)}</p>` : ""}`
+    : "";
 
-    <h2>Services included</h2>
-    <ul>${services}</ul>
-    ${notes ? `<h2>Notes during site walkthrough</h2><p>${nl2br(notes)}</p>` : ""}
-    ${stain}
-    ${pests}
+  const servicesBlock = sectionOn("services")
+    ? `<h2>Services included</h2><ul>${services}</ul>`
+    : "";
 
-    <h2>Water intrusion prevention</h2>
+  const walkBlock =
+    sectionOn("walkthrough") && notes
+      ? `<h2>Notes during site walkthrough</h2><p>${nl2br(notes)}</p>`
+      : "";
+
+  const waterIntrusionBlock = sectionOn("waterIntrusion")
+    ? `<h2>Water intrusion prevention</h2>
     <p>AmenityWorks uses a low-pressure washing system designed specifically for ${esc(
       t.systemContext
     )}. This method uses controlled water flow and evacuation, reducing:</p>
@@ -553,9 +583,11 @@ function renderProposal() {
       <li>Excess spray</li>
       <li>${esc(t.pressureAgainst)}</li>
       <li>Risk of unintended damage</li>
-    </ul>
+    </ul>`
+    : "";
 
-    <h2>Additional measures</h2>
+  const additionalBlock = sectionOn("additionalMeasures")
+    ? `<h2>Additional measures</h2>
     <p>If we identify problem areas such as ${esc(t.problemAreas)} we will:</p>
     <ul>
       <li>Notify onsite staff immediately</li>
@@ -565,9 +597,11 @@ function renderProposal() {
     <p>Barriers are optional and billed as an add-on only if required and approved. Cost should not exceed ${slotMoney(
       state.barrierCap,
       "barrier cap"
-    )} unless the property has had extreme water intrusion events in the past.</p>
+    )} unless the property has had extreme water intrusion events in the past.</p>`
+    : "";
 
-    <h2>Existing water damage observed</h2>
+  const waterDamageBlock = sectionOn("waterDamage")
+    ? `<h2>Existing water damage observed</h2>
     ${waterNotes ? `<p><strong>Observed at this property:</strong><br>${nl2br(waterNotes)}</p>` : ""}
     <p>While we cannot determine the exact cause without further inspection, common contributors include:</p>
     <ul>
@@ -576,32 +610,77 @@ function renderProposal() {
       <li>Heavy rainfall pushing water into unsealed entry points</li>
       <li>Previous high-pressure washing performed by other vendors</li>
     </ul>
-    <p>We will proceed cautiously in these areas and report any vulnerable spots before cleaning.</p>
+    <p>We will proceed cautiously in these areas and report any vulnerable spots before cleaning.</p>`
+    : "";
 
-    <h2>Estimated timeline</h2>
+  const timelineBlock = sectionOn("timeline")
+    ? `<h2>Estimated timeline</h2>
     <p>Due to the size of the project and variability of soil levels across buildings, the total duration may vary slightly. To avoid giving an inaccurate timeframe, we estimate:</p>
     <p><strong>~${slot(state.workingDays, "working days")} working days</strong></p>
-    <p>We will update management each day on progress so you always know where the team is working.</p>
+    <p>We will update management each day on progress so you always know where the team is working.</p>`
+    : "";
 
-    <h2>Resident &amp; property impact</h2>
+  const residentBlock = sectionOn("residentImpact")
+    ? `<h2>Resident &amp; property impact</h2>
     <ul>
       <li>Work can be performed during standard daylight hours</li>
       <li>Safe for painted surfaces when using low pressure</li>
       <li>Residents will be notified to keep items away from doors and walkways</li>
-    </ul>
+    </ul>`
+    : "";
 
-    <h2>Deliverables</h2>
+  const deliverablesBlock = sectionOn("deliverables")
+    ? `<h2>Deliverables</h2>
     <p>At completion, AmenityWorks will provide:</p>
-    <ul>${deliverableList().map((d) => `<li>${esc(d)}</li>`).join("")}</ul>
+    <ul>${deliverableList().map((d) => `<li>${esc(d)}</li>`).join("")}</ul>`
+    : "";
 
-    ${invest}
-
-    <h2>Insurance</h2>
+  const insuranceBlock = sectionOn("insurance")
+    ? `<h2>Insurance</h2>
     <ul>
       <li>General Liability</li>
       <li>Workers Compensation</li>
-    </ul>
+    </ul>`
+    : "";
 
+  const dateLine = [
+    formatLongDate(state.quoteDate),
+    state.validUntil ? `Valid through ${formatLongDate(state.validUntil)}` : "",
+    state.quoteNumber,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  els.proposal.innerHTML = `
+    ${state.isSample ? `<div class="sample-banner">Sample only — not a live bid</div>` : ""}
+    <header class="letterhead">
+      ${logoMarkup()}
+      <div class="co-name">AMENITYWORKS</div>
+      <div class="co-meta">
+        ${esc(company.name || "AmenityWorks LLC")}<br>
+        ${esc(company.address || "")}<br>
+        ${esc(company.phone || "")}${company.email ? ` · ${esc(company.email)}` : ""}
+      </div>
+      ${dateLine ? `<div class="doc-dates">${esc(dateLine)}</div>` : ""}
+    </header>
+
+    <h1>${slot(property, "Property name")}</h1>
+    <p class="subtitle">${esc(t.titleKind)}<br>Submitted by ${esc(company.name || "AmenityWorks LLC")}</p>
+    ${metaRows ? `<table class="meta-table">${metaRows}</table>` : ""}
+
+    ${scopeBlock}
+    ${servicesBlock}
+    ${walkBlock}
+    ${stain}
+    ${pests}
+    ${waterIntrusionBlock}
+    ${additionalBlock}
+    ${waterDamageBlock}
+    ${timelineBlock}
+    ${residentBlock}
+    ${deliverablesBlock}
+    ${invest}
+    ${insuranceBlock}
     ${others}
 
     <p>Thank you for the opportunity to provide this proposal. We appreciate your consideration and look forward to partnering with you to keep ${
@@ -615,6 +694,7 @@ function renderProposal() {
     </div>
   `;
 
+  document.title = property ? `${property} — AmenityWorks` : "AmenityWorks";
   els.xeroTitle.value = xeroTitle();
   els.xeroText.value = xeroDescription();
 }
@@ -639,17 +719,24 @@ function bindForm() {
   set("coverage", state.coverage);
   set("scopeExtra", state.scopeExtra);
   set("walkthroughNotes", state.walkthroughNotes);
-  set("includeStainNote", state.includeStainNote);
-  set("pestNests", state.pestNests);
   set("waterDamageNotes", state.waterDamageNotes);
   set("barrierCap", state.barrierCap);
   set("workingDays", state.workingDays);
   set("extraDeliverable", state.extraDeliverable);
-  set("includeOtherServices", state.includeOtherServices);
-  set("includeAcceptance", state.includeAcceptance);
   els.templateHint.textContent = template().hint;
   renderSurfaceChips();
+  renderSectionToggles();
   renderLineItems();
+}
+
+function renderSectionToggles() {
+  if (!els.sectionToggles) return;
+  els.sectionToggles.innerHTML = SECTIONS.map(
+    (s) => `<label class="check">
+      <input type="checkbox" data-section="${s.id}" ${sectionOn(s.id) ? "checked" : ""} />
+      <span>${esc(s.label)}</span>
+    </label>`
+  ).join("");
 }
 
 function renderSurfaceChips() {
@@ -728,6 +815,13 @@ function onEditorEvent(e) {
   const el = e.target;
   if (el.dataset.surface) {
     state.surfaces[el.dataset.surface] = el.checked;
+    persist();
+    renderProposal();
+    return;
+  }
+  if (el.dataset.section) {
+    if (!state.sections) state.sections = defaultSections();
+    state.sections[el.dataset.section] = el.checked;
     persist();
     renderProposal();
     return;
@@ -840,7 +934,7 @@ function openSaved(id) {
   const saved = loadJSON(SAVED_KEY, []);
   const rec = saved.find((s) => s.id === id);
   if (!rec) return;
-  state = { ...blankState(rec.state.templateId), ...rec.state, savedId: rec.id };
+  state = withSections({ ...blankState(rec.state.templateId), ...rec.state, savedId: rec.id });
   persist();
   bindForm();
   loadSavedList();

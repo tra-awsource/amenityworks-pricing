@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="AmenityWorks pressure-washing proposal builder — locked language, property-specific fields, PDF and Xero paste." />
-  <title>Proposal Builder · AmenityWorks</title>
+  <title>AmenityWorks</title>
   <link rel="manifest" href="../manifest.webmanifest" />
   <link rel="apple-touch-icon" href="../icons/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -137,22 +137,20 @@
         </section>
 
         <section class="card">
-          <h2>Site conditions <small>only appears if filled</small></h2>
+          <h2>Include on this proposal <small>uncheck to remove a section</small></h2>
+          <p class="hint">Unchecked sections stay out of the PDF and the Xero description.</p>
+          <div class="section-list" id="sectionToggles"></div>
+        </section>
+
+        <section class="card">
+          <h2>Site notes <small>only prints if that section is on</small></h2>
           <label class="field">
             <span>Walkthrough notes</span>
             <textarea name="walkthroughNotes" rows="4" placeholder="Wall damage end of Building 1, first floor&#10;Floor paint peeling in all buildings"></textarea>
           </label>
-          <label class="check">
-            <input type="checkbox" name="includeStainNote" checked />
-            <span>Include stain disclaimer (recommended)</span>
-          </label>
-          <label class="check">
-            <input type="checkbox" name="pestNests" />
-            <span>Pest nests observed — removal is a separate discussion</span>
-          </label>
           <label class="field">
             <span>Existing water damage / vulnerable spots observed</span>
-            <textarea name="waterDamageNotes" rows="3" placeholder="Leave blank unless you saw specific issues. Standard contributor list always prints."></textarea>
+            <textarea name="waterDamageNotes" rows="3" placeholder="Only used if the water-damage section is checked above."></textarea>
           </label>
           <div class="grid-2">
             <label class="field">
@@ -178,14 +176,6 @@
           <label class="field">
             <span>Extra deliverable (optional)</span>
             <input type="text" name="extraDeliverable" placeholder="e.g. Written summary of units with failed door sweeps" />
-          </label>
-          <label class="check">
-            <input type="checkbox" name="includeOtherServices" checked />
-            <span>List other AmenityWorks services at the end</span>
-          </label>
-          <label class="check">
-            <input type="checkbox" name="includeAcceptance" checked />
-            <span>Signature / acceptance line on the PDF</span>
           </label>
         </section>
       </form>
