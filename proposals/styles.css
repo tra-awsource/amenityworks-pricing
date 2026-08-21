@@ -483,8 +483,16 @@ button {
   text-align: center;
 }
 
+.proposal h1 {
+  margin: 1.15rem 0 0.35rem;
+  font-size: 1.45rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-align: center;
+}
+
 .proposal .subtitle {
-  margin: 0.95rem 0 0.9rem;
+  margin: 0 0 0.9rem;
   color: var(--paper-muted);
   font-size: 0.95rem;
   text-align: center;

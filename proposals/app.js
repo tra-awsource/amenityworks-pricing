@@ -684,6 +684,7 @@ function renderProposal() {
             ${dateLine ? `<div class="doc-dates">${esc(dateLine)}</div>` : ""}
           </header>
 
+          <h1>${slot(property, "Property name")}</h1>
           <p class="subtitle">${esc(t.titleKind)}<br>Submitted by ${esc(company.name || "AmenityWorks LLC")}</p>
           ${metaRows ? `<table class="meta-table">${metaRows}</table>` : ""}
 
