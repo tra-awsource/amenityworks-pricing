@@ -14,6 +14,7 @@ Use this file whenever you forget how the site, password, or updates work.
 | **Demo Job Pricer** | https://tra-awsource.github.io/amenityworks-pricing/demo/ |
 | **Change password (hash tool)** | https://tra-awsource.github.io/amenityworks-pricing/set-password.html |
 | **GitHub repo** | https://github.com/tra-awsource/amenityworks-pricing |
+| **Proposal Builder** | https://tra-awsource.github.io/amenityworks-pricing/proposals/ |
 | **Files on your PC** | `C:\Users\tracy\Documents\AmenityWorks-Pricing\` |
 
 **Password:** not stored in this README (on purpose).  
@@ -29,6 +30,7 @@ If you forget it → make a **new** password (you cannot undo a hash).
 | **Hub** | Home screen — open Junk or Demo |
 | **Junk Haul Pricer** | Volume / items, one-off res, one-off commercial, recurring, adders (stairs, heavy, paint $7.50/gal, mattress fee, hazmat handling, breakdown/extraction), cost floor, quote text |
 | **Demo Job Pricer** | Deck/demo tear-down: labor + trailer $125/day + dump + contingency + margin, family vs market |
+| **Proposal Builder** | Locked pressure-wash bid language with property placeholders; branded PDF + Xero paste |
 
 ---
 

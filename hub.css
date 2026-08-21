@@ -100,6 +100,11 @@ h1 {
   background: linear-gradient(145deg, #1a1830, #222028);
 }
 
+.card-proposal {
+  border-color: #6a5a20;
+  background: linear-gradient(145deg, #241e10, #1a2218);
+}
+
 .card-pressure .badge,
 .card-pressure .go {
   color: #7ec8ff;
@@ -108,6 +113,11 @@ h1 {
 .card-window .badge,
 .card-window .go {
   color: #c4b5fd;
+}
+
+.card-proposal .badge,
+.card-proposal .go {
+  color: #ffcc00;
 }
 
 .badge {

@@ -20,6 +20,9 @@
 | Hub | https://tra-awsource.github.io/amenityworks-pricing/ |
 | Junk Haul | https://tra-awsource.github.io/amenityworks-pricing/junk/ |
 | Demo Job | https://tra-awsource.github.io/amenityworks-pricing/demo/ |
+| Pressure Wash | https://tra-awsource.github.io/amenityworks-pricing/pressure/ |
+| Window Wash | https://tra-awsource.github.io/amenityworks-pricing/window/ |
+| Proposal Builder | https://tra-awsource.github.io/amenityworks-pricing/proposals/ |
 
 Repo: https://github.com/tra-awsource/amenityworks-pricing  
 

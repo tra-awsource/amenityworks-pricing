@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="AmenityWorks pressure-washing proposal builder — locked language, property-specific fields, PDF and Xero paste." />
+  <title>Proposal Builder · AmenityWorks</title>
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="../icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../mobile-shared.css" />
+  <link rel="stylesheet" href="../access-gate.css" />
+  <script src="../access-config.js"></script>
+  <script src="../access-gate.js"></script>
+</head>
+<body>
+  <div class="app">
+    <nav class="mobile-nav no-print" aria-label="App navigation">
+      <a href="../index.html">← Home</a>
+      <span class="nav-title">Proposal Builder</span>
+      <a href="../pressure/index.html">Pricer</a>
+    </nav>
+
+    <header class="page-head no-print">
+      <div>
+        <p class="eyebrow">AmenityWorks · Owner tool</p>
+        <h1>Proposal Builder</h1>
+        <p class="sub">
+          Boilerplate stays locked. You only fill the yellow fields for this property.
+          Print a matching PDF, then paste the Xero description into your quote.
+        </p>
+      </div>
+      <div class="head-actions">
+        <button type="button" class="btn ghost" id="btnSample">Load sample</button>
+        <button type="button" class="btn ghost" id="btnSettings">Company</button>
+        <button type="button" class="btn ghost" id="btnReset">New proposal</button>
+      </div>
+    </header>
+
+    <div class="view-tabs no-print" role="tablist" aria-label="Proposal views">
+      <button type="button" class="tab is-on" data-view="edit" role="tab">Fill in</button>
+      <button type="button" class="tab" data-view="preview" role="tab">Proposal</button>
+      <button type="button" class="tab" data-view="xero" role="tab">Xero text</button>
+    </div>
+
+    <div class="workspace" id="workspace" data-view="edit">
+      <form class="editor no-print" id="editor" autocomplete="off">
+        <section class="card">
+          <h2>Saved proposals</h2>
+          <div class="row">
+            <label class="field grow">
+              <span>Open a saved draft</span>
+              <select id="savedSelect">
+                <option value="">— Current draft —</option>
+              </select>
+            </label>
+            <div class="inline-btns">
+              <button type="button" class="btn primary" id="btnSave">Save</button>
+              <button type="button" class="btn ghost danger-text" id="btnDeleteSaved">Delete</button>
+            </div>
+          </div>
+          <p class="hint">Drafts stay in this browser only. Save before switching properties.</p>
+        </section>
+
+        <section class="card">
+          <h2>Template <small>locked language</small></h2>
+          <label class="field">
+            <span>Proposal type</span>
+            <select name="templateId" id="templateId">
+              <option value="building_exteriors">Building exteriors — walls, balconies, windows</option>
+              <option value="breezeway_flatwork">Breezeways &amp; flatwork — concrete, stairs, walkways</option>
+              <option value="combined">Combined community clean — exteriors + flatwork</option>
+            </select>
+          </label>
+          <p class="hint" id="templateHint"></p>
+        </section>
+
+        <section class="card">
+          <h2>Property <small>placeholders</small></h2>
+          <label class="field">
+            <span>Property name <em>{{propertyName}}</em></span>
+            <input type="text" name="propertyName" placeholder="e.g. Union at San Marcos" />
+          </label>
+          <label class="field">
+            <span>Property address</span>
+            <input type="text" name="address" placeholder="Street, city, TX" />
+          </label>
+          <div class="grid-2">
+            <label class="field">
+              <span>Prepared for (management / client)</span>
+              <input type="text" name="clientName" placeholder="e.g. Greystar / onsite management" />
+            </label>
+            <label class="field">
+              <span>Onsite contact</span>
+              <input type="text" name="contactName" placeholder="Optional" />
+            </label>
+          </div>
+          <div class="grid-3">
+            <label class="field">
+              <span>Quote date</span>
+              <input type="date" name="quoteDate" />
+            </label>
+            <label class="field">
+              <span>Valid until</span>
+              <input type="date" name="validUntil" />
+            </label>
+            <label class="field">
+              <span>Quote # (optional)</span>
+              <input type="text" name="quoteNumber" placeholder="AWQ-00xx" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Scope <small>{{surfaces}} · {{coverage}}</small></h2>
+          <p class="hint">Check what this bid includes. Unchecked items stay out of the language.</p>
+          <div class="chips" id="surfaceChips"></div>
+          <label class="field">
+            <span>Extra surface (optional)</span>
+            <input type="text" name="customSurface" placeholder="e.g. dumpster enclosures, carports" />
+          </label>
+          <label class="field">
+            <span>Coverage phrase <em>{{coverage}}</em></span>
+            <input type="text" name="coverage" placeholder="Leave blank → throughout [property name]" />
+          </label>
+          <p class="hint">Examples: throughout the property · across Buildings 1–8 · leasing office and clubhouse only</p>
+          <label class="field">
+            <span>Extra scope sentence (optional)</span>
+            <textarea name="scopeExtra" rows="2" placeholder="e.g. Included are separate line items for breezeways, courtyards, walkways, stairs, walls, and ceilings."></textarea>
+          </label>
+        </section>
+
+        <section class="card">
+          <h2>Site conditions <small>only appears if filled</small></h2>
+          <label class="field">
+            <span>Walkthrough notes</span>
+            <textarea name="walkthroughNotes" rows="4" placeholder="Wall damage end of Building 1, first floor&#10;Floor paint peeling in all buildings"></textarea>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="includeStainNote" checked />
+            <span>Include stain disclaimer (recommended)</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="pestNests" />
+            <span>Pest nests observed — removal is a separate discussion</span>
+          </label>
+          <label class="field">
+            <span>Existing water damage / vulnerable spots observed</span>
+            <textarea name="waterDamageNotes" rows="3" placeholder="Leave blank unless you saw specific issues. Standard contributor list always prints."></textarea>
+          </label>
+          <div class="grid-2">
+            <label class="field">
+              <span>Water-barrier cap <em>{{barrierCap}}</em></span>
+              <input type="number" name="barrierCap" min="0" step="100" />
+            </label>
+            <label class="field">
+              <span>Estimated working days <em>{{timeline}}</em></span>
+              <input type="text" name="workingDays" placeholder="e.g. 7 or 1–3" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Investment <small>optional — shows on the PDF</small></h2>
+          <p class="hint">Add the same lines you will enter in Xero. Leave empty if pricing lives only in Xero.</p>
+          <div id="lineItems" class="line-items"></div>
+          <button type="button" class="btn ghost" id="btnAddLine">+ Add line</button>
+        </section>
+
+        <section class="card">
+          <h2>Closing extras</h2>
+          <label class="field">
+            <span>Extra deliverable (optional)</span>
+            <input type="text" name="extraDeliverable" placeholder="e.g. Written summary of units with failed door sweeps" />
+          </label>
+          <label class="check">
+            <input type="checkbox" name="includeOtherServices" checked />
+            <span>List other AmenityWorks services at the end</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="includeAcceptance" checked />
+            <span>Signature / acceptance line on the PDF</span>
+          </label>
+        </section>
+      </form>
+
+      <aside class="preview-pane" id="previewPane">
+        <div class="preview-toolbar no-print">
+          <div class="toolbar-title">Live proposal</div>
+          <div class="toolbar-btns">
+            <button type="button" class="btn ghost" id="btnCopyTitle">Copy Xero title</button>
+            <button type="button" class="btn ghost" id="btnCopyXero">Copy Xero description</button>
+            <button type="button" class="btn primary" id="btnPrint">Print / Save PDF</button>
+          </div>
+          <p class="hint toolbar-hint">In the print dialog choose <strong>Save as PDF</strong> · Destination: Microsoft Print to PDF or Save as PDF. Attach that file to the Xero quote or email it with the quote.</p>
+          <p class="copy-status" id="copyStatus" aria-live="polite"></p>
+        </div>
+        <article class="proposal" id="proposal"></article>
+      </aside>
+
+      <section class="xero-pane no-print" id="xeroPane">
+        <div class="card xero-card">
+          <h2>Paste into Xero</h2>
+          <p class="hint">Put the title in the quote project / reference line. Paste the description into the quote description field. Enter line items in Xero as usual.</p>
+          <label class="field">
+            <span>Xero title</span>
+            <textarea id="xeroTitle" rows="2" readonly></textarea>
+          </label>
+          <label class="field">
+            <span>Xero description</span>
+            <textarea id="xeroText" rows="22" readonly></textarea>
+          </label>
+          <div class="toolbar-btns">
+            <button type="button" class="btn ghost" id="btnCopyTitle2">Copy title</button>
+            <button type="button" class="btn primary" id="btnCopyXero2">Copy description</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sticky-actions no-print">
+      <button type="button" class="btn ghost" id="btnCopyXeroMobile">Copy Xero</button>
+      <button type="button" class="btn primary" id="btnPrintMobile">Print / PDF</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal" role="dialog" aria-labelledby="settingsTitle" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Company defaults</h2>
+        <button type="button" class="btn ghost icon-only" id="btnCloseSettings" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <label class="field">
+          <span>Legal name</span>
+          <input type="text" id="coName" />
+        </label>
+        <label class="field">
+          <span>Address</span>
+          <input type="text" id="coAddress" />
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Phone</span>
+            <input type="text" id="coPhone" />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="text" id="coEmail" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Website</span>
+          <input type="text" id="coWebsite" />
+        </label>
+        <label class="field">
+          <span>Default quote validity (days)</span>
+          <input type="number" id="coValidity" min="1" max="90" />
+        </label>
+        <p class="hint">These print on every proposal from this browser.</p>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn primary" id="btnSaveCompany">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
