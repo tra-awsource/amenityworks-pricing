@@ -549,7 +549,7 @@ function renderProposal() {
       : "";
 
   const others = sectionOn("otherServices")
-    ? `<h2>As your exterior maintenance partner, we also offer</h2>
+    ? `<h2>As your exterior maintenance partner, we offer</h2>
       <ul>${OTHER_SERVICES.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>`
     : "";
 
