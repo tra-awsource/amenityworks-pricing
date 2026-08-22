@@ -109,6 +109,13 @@ const OTHER_SERVICES = [
   "Soft Washing Services",
 ];
 
+const INSURANCE_LINES = [
+  "General Liability",
+  "Workers Compensation",
+  "Umbrella",
+  "Commercial Auto",
+];
+
 const SECTIONS = [
   { id: "scope", label: "Scope of services", defaultOn: true },
   { id: "services", label: "Services included", defaultOn: true },
@@ -475,10 +482,7 @@ function xeroDescription() {
 
   if (sectionOn("insurance")) {
     blocks.push("Our Insurance:");
-    blocks.push("-General Liability");
-    blocks.push("-Workers Compensation");
-    blocks.push("-Umbrella");
-    blocks.push("-Commercial Auto");
+    for (const line of INSURANCE_LINES) blocks.push(`-${line}`);
   }
 
   return blocks.join("\n").replace(/\n{3,}/g, "\n\n");
@@ -645,13 +649,12 @@ function renderProposal() {
     : "";
 
   const insuranceBlock = sectionOn("insurance")
-    ? `<h2>Insurance</h2>
+    ? `<div class="keep-together">
+    <h2>Insurance</h2>
     <ul>
-      <li>General Liability</li>
-      <li>Workers Compensation</li>
-      <li>Umbrella</li>
-      <li>Commercial Auto</li>
-    </ul>`
+      ${INSURANCE_LINES.map((line) => `<li>${esc(line)}</li>`).join("")}
+    </ul>
+    </div>`
     : "";
 
   const dateLine = [

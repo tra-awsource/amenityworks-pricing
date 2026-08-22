@@ -800,7 +800,12 @@ button {
   }
 
   .print-sheet > tbody > tr > td {
-    padding: 0.55in 0.65in 0.2in;
+    padding: 0.55in 0.65in 0.9in;
+  }
+
+  .keep-together {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .print-foot {
