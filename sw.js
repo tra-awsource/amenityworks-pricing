@@ -1,5 +1,5 @@
 /* AmenityWorks Pricing — offline cache for local/network use */
-const CACHE = "aw-pricing-v14";
+const CACHE = "aw-pricing-v15";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -9,6 +9,9 @@ const PRECACHE = [
   "./access-gate.js",
   "./access-gate.css",
   "./set-password.html",
+  "./favicon.ico",
+  "./favicon.png",
+  "./icons/favicon.png",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./junk/index.html",
